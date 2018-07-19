@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 @WebServlet(
         urlPatterns = {"/hello"}
 )
-public class indexServlet extends HttpServlet {
+public class IndexServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request,
