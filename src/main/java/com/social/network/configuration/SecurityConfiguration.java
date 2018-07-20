@@ -1,30 +1,36 @@
 package com.social.network.configuration;
 
+import com.social.network.services.UsersService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-@EnableWebFluxSecurity
-public class SecurityConfiguration {
-    @Bean
-    public SecurityWebFilterChain securityWebFilterChain(
-            ServerHttpSecurity http) {
-        return http.authorizeExchange()
-                .anyExchange().authenticated()
-                .and().build();
+@EnableWebSecurity
+@Configuration
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private UsersService usersService;
+
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .authorizeRequests()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+//                    .loginPage("/login")
+//                    .permitAll()
+                .and()
+                .httpBasic();
     }
 
     @Bean
-    public MapReactiveUserDetailsService userDetailsService() {
-        UserDetails user = User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("password")
-                .roles("USER")
-                .build();
-        return new MapReactiveUserDetailsService(user);
+    public PasswordEncoder passwordEncoder(){
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder;
     }
 }

@@ -1,6 +1,6 @@
 package com.social.network.rest;
 
-import com.social.network.model.requests.CommentsResponce;
+import com.social.network.model.requests.CommentsRequest;
 import com.social.network.services.CommentsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +20,7 @@ public class CommentsController implements BaseController {
     private final CommentsService commentsService;
 
     @GetMapping
-    @ApiOperation(value = "Get comments", response = CommentsResponce.class)
+    @ApiOperation(value = "Get comments", response = CommentsRequest.class)
     public ResponseEntity<Object> getComments() {
         return new ResponseEntity<>(commentsService.getComments(), HttpStatus.OK);
     }
