@@ -33,7 +33,7 @@ public class UserController {
 
     @GetMapping("{userId}/socialGroups")//TODO
     @ApiOperation(value = "Get user's social groups", response = SocialGroupResponse.class)
-    public ResponseEntity<Object> getSocialGroups() {
-        return new ResponseEntity<>(usersService.getUserSocialGroups(), HttpStatus.OK);
+    public ResponseEntity<Object> getSocialGroups(@RequestParam("userId") Long userId) {
+        return new ResponseEntity<>(usersService.getUserSocialGroups(userId), HttpStatus.OK);
     }
 }
