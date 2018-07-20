@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class GiftsResponce {
+public class GiftsResponse {
     private final List<GiftDto> gifts;
     private final Integer count;
 }

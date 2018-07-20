@@ -7,6 +7,6 @@ import java.io.Serializable;
 @Embeddable
 @Data
 public class TimePK implements Serializable {
-    private final Long user_id;
-    private final Long friend_id;
+    private final Long userId;
+    private final Long friendId;
 }

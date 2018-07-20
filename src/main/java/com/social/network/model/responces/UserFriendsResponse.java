@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class UserFriendsResponce {
+public class UserFriendsResponse {
     private final List<UserFriendDto> userFriends;
     private final Integer count;
 }

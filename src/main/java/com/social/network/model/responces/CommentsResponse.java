@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class CommentsResponce {
+public class CommentsResponse {
     private final List<CommentDto> comments;
     private final Integer count;
 }

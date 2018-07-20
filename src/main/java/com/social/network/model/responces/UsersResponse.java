@@ -1,12 +1,12 @@
 package com.social.network.model.responces;
 
-import com.social.network.model.dto.PostDto;
+import com.social.network.model.dto.UserDto;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class PostResponce {
-    private final List<PostDto> posts;
+public class UsersResponse {
+    private final List<UserDto> users;
     private final Integer count;
 }

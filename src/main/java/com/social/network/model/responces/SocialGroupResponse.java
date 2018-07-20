@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class SocialGroupResponce {
+public class SocialGroupResponse {
     private final List<SocialGroupDto> socialGroups;
     private final Integer count;
 }
