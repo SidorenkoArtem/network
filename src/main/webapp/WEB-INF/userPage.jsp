@@ -1,21 +1,23 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: дима
-  Date: 23.07.2018
-  Time: 9:35
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>${user.name}</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 <div>
-
+    <jsp:include page="mainMenu.jsp" />
 </div>
 <div>
+    <jsp:include page="leftMenu.jsp" />
+</div>
 
+<div>
+<picture/>
+</div>
+
+<div>
+gift
 </div>
 </body>
 </html>

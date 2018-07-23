@@ -53,4 +53,6 @@ dependencies {
 	compile('org.projectlombok:lombok:1.16.22')
 	compile 'io.springfox:springfox-swagger2:2.7.0'
 	compile 'io.springfox:springfox-swagger-ui:2.7.0'
+	compile 'org.jsoup:jsoup:1.8.3'
+    compile 'com.github.rholder:guava-retrying:2.0.0'
 }
