@@ -13,6 +13,7 @@ public class User {
     @SequenceGenerator(name = "port_id_seq", sequenceName = "port_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "port_id_seq")
     private Long id;
+    private String login;
     private String name;
     private String email;
     private Boolean active;

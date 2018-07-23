@@ -3,10 +3,11 @@ package com.social.network.model.dao;
 import lombok.Data;
 
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
-@Data
 @Embeddable
-public class UserGroupId {
+@Data
+public class UserGroupId implements Serializable {
     private Long groupId;
     private Long userId;
 }

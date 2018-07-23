@@ -3,6 +3,7 @@ package com.social.network.utils;
 import com.social.network.model.dao.SocialGroup;
 import com.social.network.model.dao.User;
 import com.social.network.model.dao.UserFriends;
+import com.social.network.model.dto.SimpleSocialGroupDto;
 import com.social.network.model.dto.SocialGroupDto;
 import com.social.network.model.dto.UserDto;
 import com.social.network.model.dto.UserFriendDto;
@@ -42,6 +43,15 @@ public class ConvertUtil {
         socialGroupDto.setHideReaders(socialGroup.getHideReaders());
         socialGroupDto.setPrivateSocialGroup(socialGroup.getPrivateGroup());
         socialGroupDto.setCreateTimestamp(socialGroup.getCreateTimestamp());
+        return socialGroupDto;
+    }
+
+    public static SimpleSocialGroupDto convertToSimpleSocialGroupDto(final SocialGroup socialGroup) {
+        final SimpleSocialGroupDto socialGroupDto = new SimpleSocialGroupDto();
+        socialGroupDto.setUserId(socialGroup.getUserId());
+        socialGroupDto.setName(socialGroup.getName());
+        socialGroupDto.setDescription(socialGroup.getDescription());
+        socialGroupDto.setImageUrl(socialGroup.getImageUrl());
         return socialGroupDto;
     }
 }
