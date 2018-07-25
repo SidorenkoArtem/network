@@ -20,8 +20,9 @@ public class UserController {
 
     @GetMapping("/")
     @ApiOperation(value = "Get users", response = UsersResponse.class)
-    public ResponseEntity<Object> getUsers(@RequestParam(value = "searchText", required = false) String searchText) {
-        return new ResponseEntity<>(usersService.getUsers(searchText), HttpStatus.OK);
+    public ResponseEntity<Object> getUsers(@RequestParam(value = "searchText", required = false) String searchText,
+        @RequestParam(value = "offset", defaultValue = "0") Integer offset, @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
+        return new ResponseEntity<>(usersService.getUsers(searchText, offset, limit), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

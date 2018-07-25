@@ -9,11 +9,20 @@
 <html>
 <body>
 <div>
-    <picture />
     <div>
         <input
                 placeholder="${user.name}"
                 id="search"/>
+    </div>
+    <div>
+        <div>
+            <img width="100" src="favicon.ico"/>
+        </div>
+        <div>
+            <input type="button" value="Редактировать"/>
+        </div>
+    </div>
+    <div >
     </div>
 
 </div>

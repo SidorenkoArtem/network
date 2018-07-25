@@ -31,6 +31,11 @@ repositories {
 }
 
 dependencies {
+	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
+	compile('org.springframework.boot:spring-boot-starter-data-jpa') {
+		exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
+	}
+	testCompile('org.springframework.boot:spring-boot-starter-test')
 	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('org.springframework.boot:spring-boot-starter-web') {
 		exclude module: 'spring-boot-starter-tomcat'
@@ -38,13 +43,8 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-jetty")
 	compile('org.springframework.boot:spring-boot-devtools')
 	compile('javax.servlet:jstl')
-	providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 	providedRuntime('org.apache.tomcat.embed:tomcat-embed-jasper')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
 	compile('mysql:mysql-connector-java')
-	compile('org.springframework.boot:spring-boot-starter-data-jpa') {
-		exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
-	}
 	compile('org.hibernate:hibernate-core:5.3.2.Final') {
 		exclude group: 'com.zaxxer', module: 'HicariCP'
 		exclude group: 'org.hibernate', module: 'hibernate-core'
