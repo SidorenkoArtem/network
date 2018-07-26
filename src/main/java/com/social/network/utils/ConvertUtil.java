@@ -1,12 +1,7 @@
 package com.social.network.utils;
 
-import com.social.network.model.dao.SocialGroup;
-import com.social.network.model.dao.User;
-import com.social.network.model.dao.UserFriends;
-import com.social.network.model.dto.SimpleSocialGroupDto;
-import com.social.network.model.dto.SocialGroupDto;
-import com.social.network.model.dto.UserDto;
-import com.social.network.model.dto.UserFriendDto;
+import com.social.network.model.dao.*;
+import com.social.network.model.dto.*;
 
 public class ConvertUtil {
     public static UserDto convertToUserDto(final User user) {
@@ -53,5 +48,21 @@ public class ConvertUtil {
         socialGroupDto.setDescription(socialGroup.getDescription());
         socialGroupDto.setImageUrl(socialGroup.getImageUrl());
         return socialGroupDto;
+    }
+
+    public static GiftDto convertToGiftDto(final Gift gift) {
+        final GiftDto giftDto = new GiftDto();
+        giftDto.setId(gift.getId());
+        giftDto.setImageUrl(gift.getImageUrl());
+        giftDto.setCreateTimestamp(gift.getCreateTimestamp());
+        return giftDto;
+    }
+
+    public static UserGiftDto convertToUserGiftDto(final UserGift userGift, final Gift gift) {
+        final UserGiftDto userGiftDto = new UserGiftDto();
+        userGiftDto.setUserId(userGift.getUserId());
+        userGiftDto.setGift(convertToGiftDto(gift));
+        userGiftDto.setCreateTimestamp(userGift.getCreateTimestamp());
+        return userGiftDto;
     }
 }

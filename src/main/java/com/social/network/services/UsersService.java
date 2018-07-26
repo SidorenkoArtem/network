@@ -33,8 +33,8 @@ public class UsersService {
     }
 
     public SimpleUsersResponse getUsers(final String searchText, final Integer offset, final Integer limit) {
-        final Page<User> users = userRepository.findUserByFirstNameLikeOrNameLike(PageRequest.of(offset, limit),searchText);
-        return new SimpleUsersResponse(users.stream().map(ConvertUtil::convertToUserDto).collect(Collectors.toList()));
+        //final Page<User> users = userRepository.findUserByFirstNameLikeOrNameLike(searchText, PageRequest.of(offset, limit));
+        return null;//new SimpleUsersResponse(users.stream().map(ConvertUtil::convertToUserDto).collect(Collectors.toList()));
     }
 
     public UserResponse getUser(final Long id) {

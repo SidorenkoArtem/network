@@ -1,14 +1,16 @@
 package com.social.network.model.dto;
 
-import com.social.network.model.dao.Gift;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class UserGiftDto {
+public class MessagesDto {
     private Long id;
     private Long userId;
-    private GiftDto gift;
+    private Long conversationId;
+    private String text;
+    private String fileUrl;
     private LocalDateTime createTimestamp;
+    private LocalDateTime updateTimestamp;
 }

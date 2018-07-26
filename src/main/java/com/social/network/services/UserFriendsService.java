@@ -9,6 +9,7 @@ import com.social.network.model.responces.UserFriendsResponse;
 import com.social.network.repositories.UserFriendsRepository;
 import com.social.network.utils.ConvertUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,11 +20,19 @@ public class UserFriendsService {
 
     private final UserFriendsRepository userFriendsRepository;
 
-    public UserFriendsResponse getUserFriends() {
+    public UserFriendsResponse getCurrentUserFriends(final Integer offset, final Integer limit) {
         final Long userId = 0L;//TODO
-        final List<UserFriendDto> userFriends = userFriendsRepository.findUserFriendsByUserIdEquals(userId)
+        return getUserFriends(userId ,offset, limit);
+    }
+
+    public UserFriendsResponse getOtherUserFriends(final Long userId ,final Integer offset, final Integer limit) {
+        return getUserFriends(userId, offset, limit);
+    }
+
+    private UserFriendsResponse getUserFriends(final Long userId ,final Integer offset, final Integer limit) {
+        final List<UserFriendDto> userFriends = userFriendsRepository.findUserFriendsByUserIdEqualsAndStatusEquals(userId, Status.APPROVED, PageRequest.of(offset, limit))
                 .stream().map(ConvertUtil::convertToUserFriendDto).collect(Collectors.toList());
-        final Integer count = userFriendsRepository.countByUserIdEquals(userId);
+        final Integer count = userFriendsRepository.countByUserIdEqualsAndStatusEquals(userId, Status.APPROVED);
         return new UserFriendsResponse(userFriends, count);
     }
 

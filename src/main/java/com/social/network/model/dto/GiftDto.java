@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class GiftDto {
-    private final Long id;
-    private final String imageUrl;
-    private final LocalDateTime createTimestamp;
+    private Long id;
+    private String imageUrl;
+    private LocalDateTime createTimestamp;
 }

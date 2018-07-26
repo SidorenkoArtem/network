@@ -6,5 +6,5 @@ import java.util.List;
 
 @Data
 public class SimpleUsersResponse {
-    private final List<UserDto> users;
+    private List<UserDto> users;
 }

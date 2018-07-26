@@ -23,9 +23,10 @@ public class UserFriendsController implements BaseController {
 
     @GetMapping
     @ApiOperation(value = "Get friends of user", response = UserResponse.class)
-    public ResponseEntity<Object> getUsers() {
+    public ResponseEntity<Object> getUsers(@RequestParam(value = "offset", defaultValue = "0") Integer offset,
+                                           @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
         checkStandardUserAuthenticationOptions();
-        return new ResponseEntity<>(userFriendsService.getUserFriends(), HttpStatus.OK);
+        return new ResponseEntity<>(/*userFriendsService.getUserFriends(offset, limit),TODO */HttpStatus.OK);
     }
 
     @PostMapping
