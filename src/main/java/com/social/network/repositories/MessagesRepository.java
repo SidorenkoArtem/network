@@ -9,4 +9,7 @@ import java.util.List;
 public interface MessagesRepository extends CrudRepository<Messages, Long> {
     //@Query("select messages from Messages messages ") TOdo
     List<Messages> getLastMessagesByConversationId(final List<Long> conversation);
+
+//    @Query("select conversation.id from message")
+//    List<Long> getLastUserConversationId(final Long userId);
 }
