@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class ConversationDto {
     private Long id;
     private Long userId;
-    private MessagesDto lastMessages;
     private LocalDateTime createTimestamp;
     private LocalDateTime updateTimestamp;
+    private Long userIdInterlocutor;
 }

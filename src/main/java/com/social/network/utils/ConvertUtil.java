@@ -65,4 +65,26 @@ public class ConvertUtil {
         userGiftDto.setCreateTimestamp(userGift.getCreateTimestamp());
         return userGiftDto;
     }
+
+    public static ConversationDto convertToConversationDto(final Conversation conversation) {
+        final ConversationDto conversationDto = new ConversationDto();
+        conversationDto.setId(conversation.getId());
+        conversationDto.setUserId(conversation.getUserId());
+        conversationDto.setUserIdInterlocutor(conversation.getUserIdInterlocutor());
+        conversationDto.setCreateTimestamp(conversation.getCreateTimestamp());
+        conversationDto.setUpdateTimestamp(conversation.getUpdateTimestamp());
+        return conversationDto;
+    }
+
+    public static MessagesDto convertToMessagesDto(final Messages message) {
+        final MessagesDto messagesDto = new MessagesDto();
+        messagesDto.setId(message.getId());
+        messagesDto.setUserId(message.getUserId());
+        messagesDto.setConversationId(message.getConversationId());
+        messagesDto.setFileUrl(message.getFileUrl());
+        messagesDto.setText(message.getText());
+        messagesDto.setCreateTimestamp(message.getCreateTimestamp());
+        messagesDto.setUpdateTimestamp(message.getUpdateTimestamp());
+        return messagesDto;
+    }
 }

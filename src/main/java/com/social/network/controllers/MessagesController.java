@@ -16,7 +16,7 @@ public class MessagesController {
 
     @RequestMapping(value = "/messages", method = RequestMethod.GET)
     public String getUserMessages(Model model, @RequestParam(value = "offset") Integer offset, @RequestParam(value = "limit") Integer limit) {
-        model.addAttribute("messages", messagesService.getUserSimpleConversation(offset, limit));
+        //model.addAttribute("messages", messagesService.getUserSimpleConversation(offset, limit));
         return "messagesPage";
     }
 }

@@ -1,7 +1,8 @@
 package com.social.network.rest;
 
-import com.social.network.model.responces.SocialGroupResponse;
+import com.social.network.model.requests.MessageRequest;
 import com.social.network.model.responces.UsersResponse;
+import com.social.network.services.MessagesService;
 import com.social.network.services.UsersService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -10,13 +11,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/user")
 @Api(tags = "User-Controller")
 public class UserController {
 
     private final UsersService usersService;
+    private final MessagesService messagesService;
 
     @GetMapping("/")
     @ApiOperation(value = "Get users", response = UsersResponse.class)
@@ -31,10 +33,33 @@ public class UserController {
         return new ResponseEntity<>(usersService.getUser(id), HttpStatus.OK);
     }
 
+    @GetMapping("/{userId}/messages")
+    @ApiOperation(value = "Get messages by user")
+    public ResponseEntity<Object> getMessages(@PathVariable(value = "userId") Long userId,
+        @RequestParam(value = "offset", defaultValue = "0") Integer offset, @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
+        return new ResponseEntity<>(messagesService.getMessages(userId, offset, limit), HttpStatus.OK);
+    }
 
-    @GetMapping("{userId}/socialGroups")//TODO
-    @ApiOperation(value = "Get user's social groups", response = SocialGroupResponse.class)
-    public ResponseEntity<Object> getSocialGroups(@RequestParam("userId") Long userId) {
-        return new ResponseEntity<>(usersService.getUserSocialGroups(userId), HttpStatus.OK);
+    @GetMapping("/conversations")
+    @ApiOperation(value = "Get conversation")
+    public ResponseEntity<Object> getConversations(@RequestParam(value = "offset", defaultValue = "0") Integer offset,
+                                                   @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
+        return new ResponseEntity<>(messagesService.getConversations(offset, limit), HttpStatus.OK);
+    }
+
+    @GetMapping("/conversations/{conversationId}/messages")
+    @ApiOperation(value = "Get messages by conversation id")
+    public ResponseEntity<Object> getMessagesByConversationId(@PathVariable(value = "conversationId") Long conversationId,
+            @RequestParam(value = "offset", defaultValue = "0") Integer offset,
+            @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
+        return new ResponseEntity<>(messagesService.getMessagesByConversation(conversationId, offset, limit), HttpStatus.OK);
+    }
+
+    @PostMapping("/conversations/{conversationId}/messages")
+    @ApiOperation(value = "Add messages to conversation")
+    public ResponseEntity<Object> addMessagesToConversation(@PathVariable(value = "conversationId") Long conversationId,
+            @RequestBody MessageRequest messageRequest) {
+        messagesService.addMessagesToConversation(messageRequest, conversationId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

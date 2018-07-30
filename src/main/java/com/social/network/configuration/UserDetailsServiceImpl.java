@@ -1,16 +1,16 @@
 package com.social.network.configuration;
 
-import com.social.network.exceptions.UserNotExistsException;
-import com.social.network.model.dao.User;
-import com.social.network.services.UsersService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.core.userdetails.User.UserBuilder;
+//import com.social.network.exceptions.UserNotExistsException;
+//import com.social.network.model.dao.User;
+//import com.social.network.services.UsersService;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.userdetails.UserDetailsService;
+//import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.core.userdetails.User.UserBuilder;
 
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl {}/*implements UserDetailsService {
 
     @Autowired
     private UsersService usersService;
@@ -32,4 +32,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private User findUserByLogin(final String login) {
         return usersService.getUserByLogin(login).orElseThrow(UserNotExistsException::new);
     }
-}
+}*/

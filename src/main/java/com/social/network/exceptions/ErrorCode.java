@@ -11,7 +11,8 @@ public enum  ErrorCode {
     CAN_NOT_EXTRACT_LINK_DATA(2, "Can not extract link data"),
     SOCIAL_GROUP_NOT_EXISTS(3, "Social group doesn't exist"),
     REQUEST_TO_GROUP_NOT_EXIST(4, "Request to group doesn't exist"),
-    USER_GROUP_NOT_EXIST(5, "User group doesn't exist");
+    USER_GROUP_NOT_EXIST(5, "User group doesn't exist"),
+    CONVERSATION_NOT_EXIST(6, "Conversation does not exist");
 
     private final int errorCode;
     private final String message;

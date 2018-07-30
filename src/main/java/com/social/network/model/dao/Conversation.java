@@ -16,6 +16,8 @@ public class Conversation {
     private Long id;
     @Column(name = "user_id")
     private Long userId;
+    @Column(name = "user_id_interlocutor")
+    private Long userIdInterlocutor;
     @Column(name = "create_timestamp")
     private LocalDateTime createTimestamp;
     @Column(name = "update_timestamp")
