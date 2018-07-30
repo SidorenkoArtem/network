@@ -1,8 +1,10 @@
 package runner;
 
+import org.jsoup.helper.StringUtil;
+
 public class ExpressionResolver {
 
-    public static void resolver(final Character sign) {
+    public static void resolver(final Character sign, final Character prev) {
         switch (sign) {
             case ' ' :
                 break;
@@ -26,13 +28,14 @@ public class ExpressionResolver {
                 break;
             default:
                 if (Character.isDigit(sign)) {
-//                    if (Character.isDigit()) {
-//                        final String digit = Stacks.digitStack.pop();
-//                        Stacks.digitStack.push(digit + sign);
-//                    }
-                    Stacks.digitStack.push(sign.toString());
+                    if (Character.isDigit(prev)) {
+                        final String digit = Stacks.digitStack.pop();
+                        Stacks.digitStack.push(digit + sign);
+                    } else {
+                        Stacks.digitStack.push(sign.toString());
+                    }
                 } else {
-                    //TODO Error
+
                 }
         }
 
