@@ -1,8 +1,10 @@
 package com.social.network.rest;
 
 import com.social.network.model.requests.MessageRequest;
+import com.social.network.model.requests.RegistrationRequest;
 import com.social.network.model.responces.UsersResponse;
 import com.social.network.services.MessagesService;
+import com.social.network.services.UserService;
 import com.social.network.services.UsersService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -10,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,6 +23,14 @@ public class UserController {
 
     private final UsersService usersService;
     private final MessagesService messagesService;
+    private final UserService userService;
+
+    @PostMapping("/registration")
+    @ApiOperation(value = "test")
+    public ResponseEntity<Object> userRegistration(@RequestBody @Valid RegistrationRequest registrationRequest) {
+        userService.userRegistration(registrationRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @GetMapping("/")
     @ApiOperation(value = "Get users", response = UsersResponse.class)
