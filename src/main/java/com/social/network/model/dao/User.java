@@ -36,13 +36,14 @@ public class User {
     private String photoUrl;
     private Boolean active;
     private Boolean validated;
-    @Column(columnDefinition = "enum('ADMIN', 'USER')")
+    @Column(columnDefinition = "enum('ADMIN', 'USER, 'NONE')")
     @Enumerated(EnumType.STRING)
     private Roles role;
-
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private PagePermission pagePermission;
+    @Column(name = "deleted")
+    private Boolean deleted;
     @Column(name = "create_timestamp")
     private LocalDateTime createTimestamp;
 }

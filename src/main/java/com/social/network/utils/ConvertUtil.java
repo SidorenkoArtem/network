@@ -7,13 +7,23 @@ public class ConvertUtil {
     public static UserDto convertToUserDto(final User user) {
         final UserDto userDto = new UserDto();
         userDto.setId(user.getId());
+        userDto.setLogin(user.getLogin());
+        userDto.setFirstName(user.getFirstName());
         userDto.setName(user.getName());
+        userDto.setSurname(user.getSurname());
+        userDto.setBirthday(user.getBirthday());
+        userDto.setSex(user.getSex());
         userDto.setEmail(user.getEmail());
-        userDto.setActive(user.getActive());
-        userDto.setValidated(user.getValidated());
         userDto.setPhotoUrl(user.getPhotoUrl());
         userDto.setRole(user.getRole());
-        userDto.setFirstName(user.getFirstName());
+
+        userDto.setActive(user.getActive());
+        userDto.setValidated(user.getValidated());
+
+        userDto.setShowWall(user.getPagePermission().getShowWall());
+        userDto.setShowLocation(user.getPagePermission().getShowLocation());
+        userDto.setShowGift(user.getPagePermission().getShowGift());
+
         userDto.setCreateTimestamp(user.getCreateTimestamp());
         return userDto;
     }

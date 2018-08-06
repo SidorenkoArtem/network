@@ -1,7 +1,7 @@
 package com.social.network.rest;
 
 import com.social.network.model.requests.MessageRequest;
-import com.social.network.model.requests.RegistrationRequest;
+import com.social.network.model.requests.UserRequest;
 import com.social.network.model.responces.UsersResponse;
 import com.social.network.services.MessagesService;
 import com.social.network.services.UserService;
@@ -25,10 +25,17 @@ public class UserController {
     private final MessagesService messagesService;
     private final UserService userService;
 
-    @PostMapping("/registration")
-    @ApiOperation(value = "test")
-    public ResponseEntity<Object> userRegistration(@RequestBody @Valid RegistrationRequest registrationRequest) {
-        userService.userRegistration(registrationRequest);
+    @PutMapping("/")
+    @ApiOperation(value = "Update user")
+    public ResponseEntity<Object> userUpdate(@RequestBody @Valid UserRequest userRequest) {
+        userService.updateUser(userRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/")
+    @ApiOperation(value = "User registration")
+    public ResponseEntity<Object> userRegistration(@RequestBody @Valid UserRequest userRequest) {
+        userService.userRegistration(userRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

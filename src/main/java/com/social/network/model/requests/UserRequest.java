@@ -7,7 +7,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class RegistrationRequest {
+public class UserRequest {
     private final String login;
     private final String password;
     private final String firstName;

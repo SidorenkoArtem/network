@@ -2,23 +2,17 @@ package com.social.network.services;
 
 import com.social.network.exceptions.UserNotExistsException;
 import com.social.network.model.dao.User;
-import com.social.network.model.dto.UserDto;
 import com.social.network.model.enums.Roles;
-import com.social.network.model.requests.RegistrationRequest;
+import com.social.network.model.requests.UserRequest;
 import com.social.network.model.responces.SimpleUsersResponse;
 import com.social.network.model.responces.SocialGroupResponse;
 import com.social.network.model.responces.UserResponse;
-import com.social.network.model.responces.UsersResponse;
-import com.social.network.repositories.PostRepository;
 import com.social.network.repositories.UserRepository;
 import com.social.network.utils.ConvertUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import java.util.List;
+
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +40,7 @@ public class UsersService {
         return userRepository.findUserByLoginEquals(login);
     }
 
-    public void registration(final RegistrationRequest registration) {
+    public void registration(final UserRequest registration) {
         final User user = new User();
         user.setRole(Roles.USER);
         user.setName(registration.getName());
