@@ -74,6 +74,7 @@ public class ConvertUtil {
     public static UserGiftDto convertToUserGiftDto(final UserGift userGift, final Gift gift) {
         final UserGiftDto userGiftDto = new UserGiftDto();
         userGiftDto.setUserId(userGift.getUserId());
+        userGiftDto.setGiftUserFromId(userGift.getGiftFromId());
         userGiftDto.setGift(convertToGiftDto(gift));
         userGiftDto.setCreateTimestamp(userGift.getCreateTimestamp());
         return userGiftDto;
