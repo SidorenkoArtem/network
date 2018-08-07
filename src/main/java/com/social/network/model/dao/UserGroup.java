@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Table(name = "user_group")
 @IdClass(UserGroupId.class)
 public class UserGroup {
     @Id

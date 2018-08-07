@@ -18,6 +18,8 @@ public class UserGift {
     private Long userId;
     @Column(name = "gift_id")
     private Long giftId;
+    @Column(name = "gift_user_from_id")
+    private Long giftFromId;
     @Column(name = "create_timestamp")
     private LocalDateTime createTimestamp;
 }
