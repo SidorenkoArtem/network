@@ -30,9 +30,9 @@ public class UserFriendsService {
     }
 
     private UserFriendsResponse getUserFriends(final Long userId ,final Integer offset, final Integer limit) {
-        final List<UserFriendDto> userFriends = userFriendsRepository.findUserFriendsByUserIdEqualsAndStatusEquals(userId, Status.APPROVED, PageRequest.of(offset, limit))
+        final List<UserFriendDto> userFriends = userFriendsRepository.findUserFriendsByUserIdEqualsOrFriendIdEqualsAndStatusEquals(userId, userId, Status.APPROVED, PageRequest.of(offset, limit))
                 .stream().map(ConvertUtil::convertToUserFriendDto).collect(Collectors.toList());
-        final Integer count = userFriendsRepository.countByUserIdEqualsAndStatusEquals(userId, Status.APPROVED);
+        final Integer count = userFriendsRepository.countByUserIdEqualsOrFriendIdEqualsAndStatusEquals(userId, userId, Status.APPROVED);
         return new UserFriendsResponse(userFriends, count);
     }
 

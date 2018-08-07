@@ -14,12 +14,8 @@ import java.util.Optional;
 @Repository
 public interface UserFriendsRepository extends CrudRepository<UserFriends, TimePK> {
 
-    List<UserFriends> findUserFriendsByUserIdEqualsAndStatusEquals(final Long userId, final Status status, Pageable pageable);
-
-    int countByUserIdEqualsAndStatusEquals(final Long userId, Status status);
-
+    List<UserFriends> findUserFriendsByUserIdEqualsOrFriendIdEqualsAndStatusEquals(final Long userId, final Long userIdToo,
+                final Status status, Pageable pageable);
+    int countByUserIdEqualsOrFriendIdEqualsAndStatusEquals(final Long userId,final Long userIdToo, Status status);
     Optional<UserFriends> findUserFriendsByUserIdEqualsAndFriendIdEquals(final Long userId, final Long friendId);
-
-//    @Query("Select UserFriends from UserFriends where ")
-//    UserFriends findUserFriendsByUserIdInAndFriendIdIn();
 }
