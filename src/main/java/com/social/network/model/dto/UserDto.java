@@ -20,13 +20,16 @@ public class UserDto {
     private String email;
     private String photoUrl;
     private Roles role;
+    private String country;
+    private String city;
 
     private Boolean active;
     private Boolean validated;
 
+    private Boolean showGroups;
     private Boolean showWall;
     private Boolean showLocation;
-    private Boolean showGift;
+    private Boolean showGifts;
 
     private LocalDateTime createTimestamp;
 }

@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findUserByLoginEquals(final String login);
-    //Page<User> findUserByFirstNameLikeOrNameLike(final String searchText, final PageRequest pageRequest);
+    Boolean existsByEmailEquals(final String email);
+    Boolean existsByLoginEquals(final String login);
 }

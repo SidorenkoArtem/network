@@ -22,8 +22,7 @@ public class SocialGroupsService {
     private final SocialGroupRepository socialGroupRepository;
     private final UserGroupRepository userGroupRepository;
 
-    public SimpleSocialGroupsResponse getSimpleSocialGroups(final Integer offset, final Integer limit) {
-        final Long userId = 0L;//TODO
+    public SimpleSocialGroupsResponse getSimpleSocialGroups(final Long userId, final Integer offset, final Integer limit) {
         final List<UserGroup> userGroups = userGroupRepository.findSocialGroupsByUserIdEquals(userId);
         final Set<Long> groupIds = userGroups.stream().map(UserGroup::getGroupId).filter(Objects::nonNull).collect(Collectors.toSet());
         final List<SocialGroup> socialGroups = socialGroupRepository.findSocialGroupsByIdIn(groupIds, PageRequest.of(offset, limit));

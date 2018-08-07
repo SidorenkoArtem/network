@@ -18,7 +18,10 @@ public class UserRequest {
     private final String email;
     private final String photoUrl;
     private final Roles role;
+    private final String country;
+    private final String city;
+    private final Boolean showGroups;
     private final Boolean showWall;
     private final Boolean showLocation;
-    private final Boolean showGift;
+    private final Boolean showGifts;
 }

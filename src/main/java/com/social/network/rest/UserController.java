@@ -25,25 +25,26 @@ public class UserController {
     private final MessagesService messagesService;
     private final UserService userService;
 
-    @PutMapping("/")
+    @PutMapping()
     @ApiOperation(value = "Update user")
     public ResponseEntity<Object> userUpdate(@RequestBody @Valid UserRequest userRequest) {
         userService.updateUser(userRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/")
+    @PostMapping()
     @ApiOperation(value = "User registration")
-    public ResponseEntity<Object> userRegistration(@RequestBody @Valid UserRequest userRequest) {
+    public ResponseEntity<String> userRegistration(@RequestBody @Valid UserRequest userRequest) {
         userService.userRegistration(userRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/")
+    @GetMapping()
     @ApiOperation(value = "Get users", response = UsersResponse.class)
     public ResponseEntity<Object> getUsers(@RequestParam(value = "searchText", required = false) String searchText,
         @RequestParam(value = "offset", defaultValue = "0") Integer offset, @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
         return new ResponseEntity<>(usersService.getUsers(searchText, offset, limit), HttpStatus.OK);
+        //return new ResponseEntity<>(userService.getUserPage(6L), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

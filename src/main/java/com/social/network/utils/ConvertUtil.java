@@ -16,13 +16,16 @@ public class ConvertUtil {
         userDto.setEmail(user.getEmail());
         userDto.setPhotoUrl(user.getPhotoUrl());
         userDto.setRole(user.getRole());
+        userDto.setCountry(user.getCountry());
+        userDto.setCity(user.getCity());
 
         userDto.setActive(user.getActive());
         userDto.setValidated(user.getValidated());
 
+        userDto.setShowGroups(user.getPagePermission().getShowGroups());
         userDto.setShowWall(user.getPagePermission().getShowWall());
         userDto.setShowLocation(user.getPagePermission().getShowLocation());
-        userDto.setShowGift(user.getPagePermission().getShowGift());
+        userDto.setShowGifts(user.getPagePermission().getShowGifts());
 
         userDto.setCreateTimestamp(user.getCreateTimestamp());
         return userDto;

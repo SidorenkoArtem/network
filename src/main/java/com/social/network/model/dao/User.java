@@ -18,9 +18,9 @@ public class User {
     @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
     private Long id;
-    @Column(unique = true)
+
     private String email;
-    @Column(unique = true)
+
     private String login;
     @Column(nullable = false)
     private String password;
@@ -36,9 +36,11 @@ public class User {
     private String photoUrl;
     private Boolean active;
     private Boolean validated;
-    @Column(columnDefinition = "enum('ADMIN', 'USER, 'NONE')")
+    @Column(columnDefinition = "enum('ADMIN', 'USER', 'NONE')")
     @Enumerated(EnumType.STRING)
     private Roles role;
+    private String country;
+    private String city;
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private PagePermission pagePermission;
