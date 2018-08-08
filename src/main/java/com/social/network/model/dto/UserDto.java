@@ -25,6 +25,7 @@ public class UserDto {
 
     private Boolean active;
     private Boolean validated;
+    private Boolean deleted;
 
     private Boolean showGroups;
     private Boolean showWall;

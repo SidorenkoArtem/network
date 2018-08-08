@@ -4,6 +4,7 @@ import com.social.network.model.requests.MessageRequest;
 import com.social.network.model.requests.UserRequest;
 import com.social.network.model.responces.UsersResponse;
 import com.social.network.services.MessagesService;
+import com.social.network.services.SocialGroupsService;
 import com.social.network.services.UserService;
 import com.social.network.services.UsersService;
 import io.swagger.annotations.Api;
@@ -24,11 +25,12 @@ public class UserController {
     private final UsersService usersService;
     private final MessagesService messagesService;
     private final UserService userService;
+    private final SocialGroupsService socialGroupsService;
 
-    @GetMapping("/s/{userId}")
+    @GetMapping("/s/{groupId}")
     @ApiOperation(value = " 1")
-    public ResponseEntity<Object> userPage(@PathVariable(name = "userId") Long userId) {
-        return new ResponseEntity<>(userService.getUserPage(userId), HttpStatus.OK);
+    public ResponseEntity<Object> userPage(@PathVariable(name = "groupId") Long groupId) {
+        return new ResponseEntity<>(socialGroupsService.getSocialGroup(groupId), HttpStatus.OK);
     }
 
     @PutMapping()

@@ -21,8 +21,13 @@
 <c:if test="${otherUserPageData.socialGroups != null}">
     <div>
         <h1>Groups:</h1>
-        <c:forEach var="i" items="${otherUserPageData.socialGroups}">
-            <p><c:out value="${i.name}"/></p>
+        <c:forEach var="group" items="${otherUserPageData.socialGroups}">
+            <a href="/groups/${group.id}">
+                <div>
+                    <img width="20" height="20" src="${group.imageUrl}"/>
+                </div>
+                <p><c:out value="${group.name}"/></p>
+            </a>
         </c:forEach>
     </div>
 </c:if>

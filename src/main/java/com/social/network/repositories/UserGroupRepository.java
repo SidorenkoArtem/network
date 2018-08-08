@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface UserGroupRepository extends CrudRepository<UserGroup, Long> {
     List<UserGroup> findSocialGroupsByUserIdEquals(final Long userId);
     Optional<UserGroup> findUserGroupByUserIdEqualsAndGroupIdEquals(final Long userId, final Long groupId);
+    List<UserGroup> findUserGroupsByGroupIdEquals(final Long groupId, final Pageable pageable);
+    int countByGroupIdEquals(final Long groupId);
 }

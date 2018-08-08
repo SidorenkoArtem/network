@@ -78,6 +78,7 @@ public class UserService {
         pagePermission.setShowWall(userRequest.getShowWall());
         pagePermission.setShowLocation(userRequest.getShowLocation());
         pagePermission.setShowGifts(userRequest.getShowGifts());
+        pagePermission.setShowFriends(userRequest.getShowFriends());
         currentUser.setPagePermission(pagePermission);
         userRepository.save(currentUser);
         return currentUser;
@@ -118,7 +119,6 @@ public class UserService {
             final UserFriendsResponse userFriend = userFriendsService.getOtherUserFriends(userId, DEFAULT_OFFSET, DEFAULT_USER_FRIENDS_LIMIT);
             pageResponses.setFriends(userFriend.getUserFriends());
             pageResponses.setCountFriends(userFriend.getCount());
-            System.out.println(userFriend.getUserFriends());
         }
         return pageResponses;
     }

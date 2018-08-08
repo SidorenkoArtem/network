@@ -18,6 +18,7 @@ public class UserPageController implements BaseController {
 //    private final GiftsService giftsService;
 //    private final UserFriendsService userFriendsService;
     private final UserService userService;
+    private final SocialGroupsService socialGroupsService;
 
 //    @RequestMapping(value = "/userPage", method = RequestMethod.GET)
 //    public String userPage(Model model) {
@@ -32,5 +33,11 @@ public class UserPageController implements BaseController {
     public String userPage(final Model model, @PathVariable(name = "userId") Long userId) {
         model.addAttribute("otherUserPageData", userService.getUserPage(userId));
         return "userPage";
+    }
+
+    @RequestMapping(value = "/groups/{groupId}")
+    public String groupPage(final Model model, @PathVariable(name = "groupId") Long groupId) {
+        model.addAttribute("groupData", socialGroupsService.getSocialGroup(groupId));
+        return "GroupPage";
     }
 }

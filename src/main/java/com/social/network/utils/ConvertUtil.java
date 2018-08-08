@@ -21,6 +21,7 @@ public class ConvertUtil {
 
         userDto.setActive(user.getActive());
         userDto.setValidated(user.getValidated());
+        userDto.setDeleted(user.getDeleted());
 
         userDto.setShowGroups(user.getPagePermission().getShowGroups());
         userDto.setShowWall(user.getPagePermission().getShowWall());
@@ -58,6 +59,7 @@ public class ConvertUtil {
 
     public static SimpleSocialGroupDto convertToSimpleSocialGroupDto(final SocialGroup socialGroup) {
         final SimpleSocialGroupDto socialGroupDto = new SimpleSocialGroupDto();
+        socialGroupDto.setId(socialGroup.getId());
         socialGroupDto.setUserId(socialGroup.getUserId());
         socialGroupDto.setName(socialGroup.getName());
         socialGroupDto.setDescription(socialGroup.getDescription());
