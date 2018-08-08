@@ -34,12 +34,12 @@
 <c:if test="${otherUserPageData.friends != null}">
     <div>
         <h1>Friends:</h1>
-        <c:forEach var="i" items="${otherUserPageData.friends}">
-            <a href="/${i.friend.userId}">
+        <c:forEach var="friend" items="${otherUserPageData.friends}">
+            <a href="/${friend.friend.userId}">
                 <div>
-                    <img width="20" height="20" src="${i.friend.photoUrl}"/>
+                    <img width="20" height="20" src="${friend.friend.photoUrl}"/>
                 </div>
-                <p><c:out value="${i.friend.firstName}"/> <c:out value="${i.friend.name}"/></p>
+                <p><c:out value="${friend.friend.firstName}"/> <c:out value="${friend.friend.name}"/></p>
             </a>
         </c:forEach>
     </div>
@@ -47,11 +47,11 @@
 <c:if test="${otherUserPageData.gifts != null}">
     <div>
         <h1>Gifts:</h1>
-        <c:forEach var="i" items="${otherUserPageData.gifts}">
+        <c:forEach var="gift" items="${otherUserPageData.gifts}">
             <div>
-                <img width="30" height="30" src="${i.gift.imageUrl}"/>
+                <img width="20" height="20" src="${gift.gift.imageUrl}"/>
             </div>
-            <p><c:out value="${i.user.firstName}"/> <c:out value="${i.user.name}"/></p>
+            <p><c:out value="${gift.user.firstName}"/> <c:out value="${gift.user.name}"/></p>
         </c:forEach>
     </div>
 </c:if>
