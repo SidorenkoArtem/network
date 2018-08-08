@@ -31,12 +31,14 @@ public class ConvertUtil {
         return userDto;
     }
 
-    public static UserFriendDto convertToUserFriendDto(final UserFriends userFriend) {
+    public static SimpleUserDto convertToSimpleUserDto(final User user) {
+        return new SimpleUserDto(user.getId(), user.getFirstName(), user.getName(), user.getPhotoUrl());
+    }
+
+    public static UserFriendDto convertToUserFriendDto(final Long userId, final User user) {
         final UserFriendDto userFriendDto = new UserFriendDto();
-        userFriendDto.setUserId(userFriend.getUserId());
-        userFriendDto.setFriendId(userFriend.getFriendId());
-        userFriendDto.setStatus(userFriend.getStatus());
-        userFriendDto.setCreateTimestamp(userFriend.getCreateTimestamp());
+        userFriendDto.setFriend(convertToSimpleUserDto(user));
+        userFriendDto.setUserId(userId);
         return userFriendDto;
     }
 
@@ -71,12 +73,13 @@ public class ConvertUtil {
         return giftDto;
     }
 
-    public static UserGiftDto convertToUserGiftDto(final UserGift userGift, final Gift gift) {
+    public static UserGiftDto convertToUserGiftDto(final UserGift userGift, final Gift gift, final User user) {
         final UserGiftDto userGiftDto = new UserGiftDto();
-        userGiftDto.setUserId(userGift.getUserId());
+        userGiftDto.setId(userGift.getId());
         userGiftDto.setGiftUserFromId(userGift.getGiftFromId());
         userGiftDto.setGift(convertToGiftDto(gift));
         userGiftDto.setCreateTimestamp(userGift.getCreateTimestamp());
+        userGiftDto.setUser(convertToSimpleUserDto(user));
         return userGiftDto;
     }
 

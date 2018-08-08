@@ -24,4 +24,5 @@ public class UserRequest {
     private final Boolean showWall;
     private final Boolean showLocation;
     private final Boolean showGifts;
+    private final Boolean showFriends;
 }

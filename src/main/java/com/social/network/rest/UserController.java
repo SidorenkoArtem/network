@@ -25,6 +25,12 @@ public class UserController {
     private final MessagesService messagesService;
     private final UserService userService;
 
+    @GetMapping("/s/{userId}")
+    @ApiOperation(value = " 1")
+    public ResponseEntity<Object> userPage(@PathVariable(name = "userId") Long userId) {
+        return new ResponseEntity<>(userService.getUserPage(userId), HttpStatus.OK);
+    }
+
     @PutMapping()
     @ApiOperation(value = "Update user")
     public ResponseEntity<Object> userUpdate(@RequestBody @Valid UserRequest userRequest) {

@@ -50,6 +50,7 @@ public class UserService {
         pagePermission.setShowWall(userRequest.getShowWall());
         pagePermission.setShowLocation(userRequest.getShowLocation());
         pagePermission.setShowGifts(userRequest.getShowGifts());
+        pagePermission.setShowFriends(userRequest.getShowFriends());
         user.setPagePermission(pagePermission);
         userRepository.save(user);
     }
@@ -117,8 +118,27 @@ public class UserService {
             final UserFriendsResponse userFriend = userFriendsService.getOtherUserFriends(userId, DEFAULT_OFFSET, DEFAULT_USER_FRIENDS_LIMIT);
             pageResponses.setFriends(userFriend.getUserFriends());
             pageResponses.setCountFriends(userFriend.getCount());
+            System.out.println(userFriend.getUserFriends());
         }
-
         return pageResponses;
     }
+
+    @Transactional(readOnly = true)
+    public PageResponses getCurrentPageResponses() {
+        final Long userId = 6L;//ContextHolder
+        final PageResponses pageResponses = new PageResponses();
+        final User user = userRepository.findById(userId).orElseThrow(UserNotExistsException::new);
+        final UserGiftsResponse gifts = giftsService.getOtherUserGift(userId, DEFAULT_OFFSET, DEFAULT_GIFTS_LIMIT);
+        final SimpleSocialGroupsResponse groups = socialGroupsService.getSimpleSocialGroups(userId, DEFAULT_OFFSET, DEFAULT_SOCIAL_GROUPS_LIMIT);
+        final UserFriendsResponse userFriend = userFriendsService.getOtherUserFriends(userId, DEFAULT_OFFSET, DEFAULT_USER_FRIENDS_LIMIT);
+        pageResponses.setUser(ConvertUtil.convertToUserDto(user));
+        pageResponses.setGifts(gifts.getUserGifts());
+        pageResponses.setCountGift(gifts.getCount());
+        pageResponses.setSocialGroups(groups.getSocialGroups());
+        pageResponses.setCountSocialGroups(groups.getCount());
+        pageResponses.setFriends(userFriend.getUserFriends());
+        pageResponses.setCountFriends(userFriend.getCount());
+        return pageResponses;
+    }
+
 }
