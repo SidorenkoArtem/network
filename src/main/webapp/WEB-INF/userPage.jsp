@@ -2,21 +2,21 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
+    <jsp:include page="Header.jsp"/>
     <title>${user.name}</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div>
-    <jsp:include page="mainMenu.jsp" />
+    <jsp:include page="mainMenu.jsp"/>
 </div>
 <div>
-    <jsp:include page="leftMenu.jsp" />
+    <jsp:include page="leftMenu.jsp"/>
 </div>
 
 <div>
     <p>"${otherUserPageData.user.photoUrl}"</p>
-<picture/>
 </div>
 <c:if test="${otherUserPageData.socialGroups != null}">
     <div>

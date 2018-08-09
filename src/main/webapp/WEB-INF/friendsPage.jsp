@@ -1,16 +1,38 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: дима
-  Date: 26.07.2018
-  Time: 11:46
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <%--<jsp:include page="Header.jsp"/>--%>
+    <title>Friends</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
-
+<h1>Friends:</h1>
+<div id="friendsContainer">
+    <p>1111</p>
+</div>
+<button id="loadFriends" onclick="addElement()">try it</button>
+<script>
+    var page = 0;
+    var count = 0;
+    function addElement() {
+        $.ajax({
+            url: "/user/${userId}/friends?page=" + page,
+            method: "GET",
+            success: function(response) {
+                var userFriends = response.userFriends;
+                userFriends.forEach(function(el) {
+                    var domElement = '<div><a href="/' + el.friend.userId + '"> <img src="'+ el.friend.photoUrl +
+                        '"></div><p>' + el.friend.firstName + ' ' + el.friend.name + '</p>';
+                    $("#friendsContainer").append(domElement);
+                    count++;
+                    if (count === response.count) {
+                        $("#loadFriends").hide();
+                    }
+                });
+            }
+        });
+        page++;
+    }
+</script>
 </body>
 </html>

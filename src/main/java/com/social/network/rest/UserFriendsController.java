@@ -26,7 +26,7 @@ public class UserFriendsController implements BaseController {
     public ResponseEntity<Object> getUsers(@RequestParam(value = "offset", defaultValue = "0") Integer offset,
                                            @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
         checkStandardUserAuthenticationOptions();
-        return new ResponseEntity<>(/*userFriendsService.getUserFriends(offset, limit),TODO */HttpStatus.OK);
+        return new ResponseEntity<>(/*userFriendsService.getUserFriends(offset, limit), */HttpStatus.OK);
     }
 
     @PostMapping

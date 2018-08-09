@@ -3,10 +3,7 @@ package com.social.network.rest;
 import com.social.network.model.requests.MessageRequest;
 import com.social.network.model.requests.UserRequest;
 import com.social.network.model.responces.UsersResponse;
-import com.social.network.services.MessagesService;
-import com.social.network.services.SocialGroupsService;
-import com.social.network.services.UserService;
-import com.social.network.services.UsersService;
+import com.social.network.services.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +23,7 @@ public class UserController {
     private final MessagesService messagesService;
     private final UserService userService;
     private final SocialGroupsService socialGroupsService;
+    private final UserFriendsService userFriendsService;
 
     @GetMapping("/s/{groupId}")
     @ApiOperation(value = " 1")
@@ -89,5 +87,12 @@ public class UserController {
             @RequestBody MessageRequest messageRequest) {
         messagesService.addMessagesToConversation(messageRequest, conversationId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{userId}/friends")
+    @ApiOperation(value = "Get user friend")
+    public ResponseEntity<Object> getUserFriend(@PathVariable(name = "userId") Long userId,
+            @RequestParam(name = "page", defaultValue = "0") Integer page, @RequestParam(name = "limit", defaultValue = "5") Integer limit) {
+        return new ResponseEntity(userFriendsService.getFriends(userId, page, limit), HttpStatus.OK);
     }
 }

@@ -13,21 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequiredArgsConstructor
 public class UserPageController implements BaseController {
 
-//    private final UsersService usersService;
-//    private final UserGroupsService userGroupsService;
-//    private final GiftsService giftsService;
-//    private final UserFriendsService userFriendsService;
     private final UserService userService;
     private final SocialGroupsService socialGroupsService;
-
-//    @RequestMapping(value = "/userPage", method = RequestMethod.GET)
-//    public String userPage(Model model) {
-//        model.addAttribute("user", usersService.getUserByLogin("admin").orElseThrow(UserNotExistsException::new));
-//        model.addAttribute("groups", userGroupsService.getCurrentUserGroups(0, 10));
-//        model.addAttribute("gifts", giftsService.getCurrentUserGift(0, 10));
-//        model.addAttribute("friends", userFriendsService.getCurrentUserFriends(0, 10));
-//        return "userPage";
-//    }
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
     public String userPage(final Model model, @PathVariable(name = "userId") Long userId) {
@@ -35,9 +22,15 @@ public class UserPageController implements BaseController {
         return "userPage";
     }
 
-    @RequestMapping(value = "/groups/{groupId}")
+    @RequestMapping(value = "/groups/{groupId}", method = RequestMethod.GET)
     public String groupPage(final Model model, @PathVariable(name = "groupId") Long groupId) {
         model.addAttribute("groupData", socialGroupsService.getSocialGroup(groupId));
         return "GroupPage";
+    }
+
+    @RequestMapping(value = "/userFriendPage/{userId}", method = RequestMethod.GET)
+    public String friendPage(final Model model, @PathVariable(name = "userId") Long userId) {
+        model.addAttribute("userId", userId);
+        return "friendsPage";
     }
 }

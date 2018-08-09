@@ -12,8 +12,8 @@ import com.social.network.repositories.UserRepository;
 import com.social.network.utils.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -36,7 +36,7 @@ public class UserFriendsService {
 
     private UserFriendsResponse getUserFriends(final Long userId ,final Integer offset, final Integer limit) {
         final List<UserFriends> userFriends = userFriendsRepository.findUserFriendsByUserIdEqualsOrFriendIdEqualsAndStatusEquals(userId, userId, Status.APPROVED, PageRequest.of(offset, limit));
-        final Set<Long> userFriendIds = getUserFriend(userFriends);
+        final Set<Long> userFriendIds = getUserFriendIds(userFriends, userId);
         final List<User> users = userRepository.findUsersByIdIn(userFriendIds);
         final Map<Long, User> userIdAndUserMap = users.stream().collect(Collectors.toMap(User::getId, Function.identity()));
         final List<UserFriendDto> userFriendDtos = userFriendIds.stream().filter(e -> !e.equals(userId))
@@ -48,9 +48,9 @@ public class UserFriendsService {
         return new UserFriendsResponse(userFriendDtos, count);
     }
 
-    private Set<Long> getUserFriend(final List<UserFriends> userFriends) {
-        final Set<Long> userFriendIds = userFriends.stream().map(UserFriends::getFriendId).collect(Collectors.toSet());
-        userFriendIds.addAll(userFriends.stream().map(UserFriends::getUserId).collect(Collectors.toSet()));
+    private Set<Long> getUserFriendIds(final List<UserFriends> userFriends, final Long userId) {
+        final Set<Long> userFriendIds = userFriends.stream().map(UserFriends::getFriendId).filter(e -> !e.equals(userId)).collect(Collectors.toSet());
+        userFriendIds.addAll(userFriends.stream().map(UserFriends::getUserId).filter(e -> !e.equals(userId)).collect(Collectors.toSet()));
         return userFriendIds;
     }
 
@@ -75,5 +75,16 @@ public class UserFriendsService {
         final Long currentUserId = 0L;//TODO
 
         //userFriendsRepository.delete();
+    }
+
+    public UserFriendsResponse getFriends(final Long userId, final Integer page, final Integer limit) {
+        final List<UserFriends> userFriends = userFriendsRepository.findUserFriendsByUserIdEqualsOrFriendIdEqualsAndStatusEquals(
+                userId, userId, Status.APPROVED, PageRequest.of(page, limit, Sort.by(Sort.Order.desc("createTimestamp"))));
+        final Set<Long> userFriendIds = getUserFriendIds(userFriends, userId);
+        final List<User> users = userRepository.findUsersByIdIn(userFriendIds);
+        return new UserFriendsResponse(users.stream().map(e -> {
+            return ConvertUtil.convertToUserFriendDto(userId, e);
+        }).collect(Collectors.toList()),
+                userFriendsRepository.countByUserIdEqualsOrFriendIdEqualsAndStatusEquals(userId, userId, Status.APPROVED));
     }
 }
