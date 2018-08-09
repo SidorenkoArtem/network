@@ -24,6 +24,7 @@ public class UserController {
     private final UserService userService;
     private final SocialGroupsService socialGroupsService;
     private final UserFriendsService userFriendsService;
+    private final UserGroupsService userGroupsService;
 
     @GetMapping("/s/{groupId}")
     @ApiOperation(value = " 1")
@@ -90,9 +91,16 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/friends")
-    @ApiOperation(value = "Get user friend")
+    @ApiOperation(value = "Get user friends")
     public ResponseEntity<Object> getUserFriend(@PathVariable(name = "userId") Long userId,
             @RequestParam(name = "page", defaultValue = "0") Integer page, @RequestParam(name = "limit", defaultValue = "5") Integer limit) {
         return new ResponseEntity(userFriendsService.getFriends(userId, page, limit), HttpStatus.OK);
+    }
+
+    @GetMapping("/{userId}/groups")
+    @ApiOperation(value = "Get user groups")
+    public ResponseEntity<Object> getUserGroups(@PathVariable(name = "userId") Long userId,
+            @RequestParam(name = "page", defaultValue = "0") Integer page, @RequestParam(name = "limit", defaultValue = "5") Integer limit) {
+        return new ResponseEntity<>(userGroupsService.getOtherUserGroups(userId, page, limit), HttpStatus.OK);
     }
 }

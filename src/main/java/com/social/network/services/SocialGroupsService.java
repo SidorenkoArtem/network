@@ -16,6 +16,7 @@ import com.social.network.repositories.UserRepository;
 import com.social.network.utils.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
@@ -30,10 +31,10 @@ public class SocialGroupsService {
     private final UserGroupRepository userGroupRepository;
     private final UserRepository userRepository;
 
-    public SimpleSocialGroupsResponse getSimpleSocialGroups(final Long userId, final Integer offset, final Integer limit) {
-        final List<UserGroup> userGroups = userGroupRepository.findSocialGroupsByUserIdEquals(userId);
+    public SimpleSocialGroupsResponse getSimpleSocialGroups(final Long userId, final Integer page, final Integer limit) {
+        final List<UserGroup> userGroups = userGroupRepository.findSocialGroupsByUserIdEquals(userId, PageRequest.of(page, limit, Sort.by(Sort.Order.desc("createTimestamp"))));
         final Set<Long> groupIds = userGroups.stream().map(UserGroup::getGroupId).filter(Objects::nonNull).collect(Collectors.toSet());
-        final List<SocialGroup> socialGroups = socialGroupRepository.findSocialGroupsByIdIn(groupIds, PageRequest.of(offset, limit));
+        final List<SocialGroup> socialGroups = socialGroupRepository.findSocialGroupsByIdIn(groupIds);
         final List<SimpleSocialGroupDto> socialGroupDtos = socialGroups.stream()
                 .map(ConvertUtil::convertToSimpleSocialGroupDto).collect(Collectors.toList());
         return new SimpleSocialGroupsResponse(socialGroupDtos, groupIds.size());

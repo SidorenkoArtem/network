@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface SocialGroupRepository extends CrudRepository<SocialGroup, Long> {
-    List<SocialGroup> findSocialGroupsByIdIn(final Collection<Long> userIds, final Pageable pageable);
+    List<SocialGroup> findSocialGroupsByIdIn(final Collection<Long> userIds);
 }
