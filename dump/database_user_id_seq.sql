@@ -1,0 +1,1 @@
+INSERT INTO `database`.user_id_seq (next_val) VALUES (32);

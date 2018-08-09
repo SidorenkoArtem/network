@@ -1,0 +1,1 @@
+INSERT INTO `database`.user_gift (id, user_id, gift_id, create_timestamp, gift_user_from_id) VALUES (0, 6, 0, '2018-08-07 12:46:36', 31);

@@ -1,0 +1,6 @@
+INSERT INTO `database`.social_group (id, name, header, user_id, image_url, description, hide_readers, private, create_timestamp) VALUES (0, '1', '1', 0, 'favicon.ico', '1', 0, null, '2018-07-23 08:23:37');
+INSERT INTO `database`.social_group (id, name, header, user_id, image_url, description, hide_readers, private, create_timestamp) VALUES (1, '2', '2', 6, 'favicon.ico', '2', 0, null, '2018-08-09 13:33:15');
+INSERT INTO `database`.social_group (id, name, header, user_id, image_url, description, hide_readers, private, create_timestamp) VALUES (2, '3', '3', 28, 'favicon.ico', '3', 0, null, '2018-08-09 13:33:39');
+INSERT INTO `database`.social_group (id, name, header, user_id, image_url, description, hide_readers, private, create_timestamp) VALUES (3, '4', '4', 29, 'favicon.ico', '4', 0, null, '2018-08-09 13:34:09');
+INSERT INTO `database`.social_group (id, name, header, user_id, image_url, description, hide_readers, private, create_timestamp) VALUES (4, '5', '5', 30, 'favicon.ico', '5', 0, null, '2018-08-09 13:34:32');
+INSERT INTO `database`.social_group (id, name, header, user_id, image_url, description, hide_readers, private, create_timestamp) VALUES (5, '6', '6', 31, 'favicon.ico', '6', 0, null, '2018-08-09 13:34:51');

@@ -1,0 +1,1 @@
+INSERT INTO `database`.messages (id, user_id, conversation_id, text, file_url, create_timestamp, update_timestamp) VALUES (1, 0, 0, 'Test', '1', null, null);

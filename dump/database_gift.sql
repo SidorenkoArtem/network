@@ -1,0 +1,1 @@
+INSERT INTO `database`.gift (id, image_url, create_timestamp) VALUES (0, 'favicon.ico', '2018-08-07 11:54:35');

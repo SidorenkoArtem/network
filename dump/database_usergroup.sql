@@ -1,0 +1,1 @@
+INSERT INTO `database`.usergroup (group_id, user_id, create_timestamp, status) VALUES (0, 6, '2018-07-23 08:25:09', 'APPROVED');

@@ -1,0 +1,1 @@
+INSERT INTO `database`.conversation (id, user_id, create_timestamp, update_timestamp, user_id_interlocutor) VALUES (0, 0, '2018-07-30 09:14:48', '2018-07-30 09:14:51', 1);

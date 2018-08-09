@@ -1,0 +1,1 @@
+INSERT INTO `database`.port_id_seq (next_val) VALUES (1);

@@ -1,0 +1,1 @@
+INSERT INTO `database`.messages_id_seq (next_val) VALUES (2);
