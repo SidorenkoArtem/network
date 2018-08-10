@@ -28,13 +28,13 @@ public class UserPageController implements BaseController {
         return "userPage";
     }
 
-    @RequestMapping(value = "/userFriendPage/{userId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/friends/{userId}", method = RequestMethod.GET)
     public String friendPage(final Model model, @PathVariable(name = "userId") Long userId) {
         model.addAttribute("userId", userId);
         return "friendsPage";
     }
 
-    @RequestMapping(value = "/userGroupPage/{userId}")
+    @RequestMapping(value = "/user/groups/{userId}")
     public String groupPage(final Model model, @PathVariable(name = "userId") Long userId) {
         model.addAttribute("userId", userId);
         return "groupsPage";

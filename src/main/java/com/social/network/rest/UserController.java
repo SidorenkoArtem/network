@@ -22,7 +22,6 @@ public class UserController {
     private final UsersService usersService;
     private final MessagesService messagesService;
     private final UserService userService;
-    private final SocialGroupsService socialGroupsService;
     private final UserFriendsService userFriendsService;
     private final UserGroupsService userGroupsService;
 
