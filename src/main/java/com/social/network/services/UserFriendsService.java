@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -77,6 +79,7 @@ public class UserFriendsService {
         //userFriendsRepository.delete();
     }
 
+    @Transactional(readOnly = true)
     public UserFriendsResponse getFriends(final Long userId, final Integer page, final Integer limit) {
         final List<UserFriends> userFriends = userFriendsRepository.findUserFriendsByUserIdEqualsOrFriendIdEqualsAndStatusEquals(
                 userId, userId, Status.APPROVED, PageRequest.of(page, limit, Sort.by(Sort.Order.desc("createTimestamp"))));

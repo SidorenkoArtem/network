@@ -22,13 +22,15 @@
     <button id="writeMessage" onclick="openWindow()">Написать сообщение</button>
     <script>
         function openWindow() {
-            var request = {
-                receiverUserId: ${otherUserPageData.user.id},
+            var request = JSON.stringify({
+                receiverUserId: "${otherUserPageData.user.id}",
                 text: "faded",
                 fileUrl: "/chtotoGdeto"
-            };
+            });
             $.ajax({
                 url: "/user/messages",
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
                 method: "POST",
                 data: request
             });

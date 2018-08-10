@@ -16,6 +16,8 @@
     function addElement() {
         $.ajax({
             url: "/user/${userId}/friends?page=" + page,
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
             method: "GET",
             success: function(response) {
                 var userFriends = response.userFriends;
