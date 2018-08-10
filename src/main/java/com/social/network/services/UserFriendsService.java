@@ -85,9 +85,8 @@ public class UserFriendsService {
                 userId, userId, Status.APPROVED, PageRequest.of(page, limit, Sort.by(Sort.Order.desc("createTimestamp"))));
         final Set<Long> userFriendIds = getUserFriendIds(userFriends, userId);
         final List<User> users = userRepository.findUsersByIdIn(userFriendIds);
-        return new UserFriendsResponse(users.stream().map(e -> {
-            return ConvertUtil.convertToUserFriendDto(userId, e);
-        }).collect(Collectors.toList()),
+        return new UserFriendsResponse(users.stream().map(e -> ConvertUtil.convertToUserFriendDto(userId, e))
+                .collect(Collectors.toList()),
                 userFriendsRepository.countByUserIdEqualsOrFriendIdEqualsAndStatusEquals(userId, userId, Status.APPROVED));
     }
 }
