@@ -14,6 +14,7 @@ import com.social.network.repositories.MessagesRepository;
 import com.social.network.utils.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,29 +37,35 @@ public class MessagesService {
         return new ConversationsResponse(conversationDtos, count);
     }
 
-    public MessagesResponse getMessages(final Long userId ,final Integer offset, final Integer limit) {
-        final Long currentUserId = 0L;//Todo
-        final Conversation conversation = conversationRepository.getUserConversation(currentUserId, userId)
-                .orElseThrow(ConversationNotExistException::new);
-        final List<Messages> messages = messagesRepository
-                .findMessagesByConversationIdEquals(conversation.getId(), PageRequest.of(offset, limit));
-        final List<MessagesDto> messagesDtos = messages.stream().map(ConvertUtil::convertToMessagesDto).collect(Collectors.toList());
-        final Integer count = messagesRepository.countByConversationIdEquals(conversation.getId());
-        return new MessagesResponse(messagesDtos, count);
+    public MessagesResponse getMessages(final Long userId ,final Integer page, final Integer limit) {
+        final Long currentUserId = 6L;//TODO get userId from context holder
+        final List<Messages> messages = messagesRepository.getUserMessages(currentUserId, userId, PageRequest.of(page, limit, Sort.by("createTimeStamp")));
+        final List<MessagesDto> messageDtos = messages.stream().map(ConvertUtil::convertToMessagesDto).collect(Collectors.toList());
+        return new MessagesResponse(messageDtos, messagesRepository.getCountMessages(currentUserId, userId));
     }
 
     public ConversationResponse getMessagesByConversation(final Long conversationId, final Integer offset, final Integer limit) {
-        final List<Messages> messages = messagesRepository.findMessagesByConversationIdEquals(conversationId, PageRequest.of(offset, limit));
-        final Integer count = messagesRepository.countByConversationIdEquals(conversationId);
-        final List<MessagesDto> messagesDtos = messages.stream().map(ConvertUtil::convertToMessagesDto).collect(Collectors.toList());
-        return new ConversationResponse(messagesDtos, count);
+//        final List<Messages> messages = messagesRepository.findMessagesByConversationIdEquals(conversationId, PageRequest.of(offset, limit));
+//        final Integer count = messagesRepository.countByConversationIdEquals(conversationId);
+//        final List<MessagesDto> messagesDtos = messages.stream().map(ConvertUtil::convertToMessagesDto).collect(Collectors.toList());
+        return new ConversationResponse(null, null);
     }
 
     public void addMessagesToConversation(final MessageRequest messageRequest, final Long conversationId) {
         final Long userId = 0L;//Todo
         final Messages message = new Messages();
         message.setUserId(userId);
-        message.setConversationId(conversationId);
+        //message.setConversationId(conversationId);
+        message.setText(messageRequest.getText());
+        message.setFileUrl(messageRequest.getFileUrl());
+        messagesRepository.save(message);
+    }
+
+    public void sendMessage(final MessageRequest messageRequest) {
+        final Long userId = 6L;
+        final Messages message = new Messages();
+        message.setUserId(userId);
+        message.setReceiverUserId(messageRequest.getReceiverUserId());
         message.setText(messageRequest.getText());
         message.setFileUrl(messageRequest.getFileUrl());
         messagesRepository.save(message);

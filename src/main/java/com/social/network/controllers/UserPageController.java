@@ -16,6 +16,12 @@ public class UserPageController implements BaseController {
 
     private final UserService userService;
 
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String currentPage(final Model model) {
+        model.addAttribute("otherUserPageData", userService.getCurrentUserPage());
+        return "userPage";
+    }
+
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
     public String userPage(final Model model, @PathVariable(name = "userId") Long userId) {
         model.addAttribute("otherUserPageData", userService.getUserPage(userId));

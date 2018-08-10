@@ -18,7 +18,7 @@ public class login {
     @Autowired
     private UserFriendsRepository userFriendsRepository;
 
-    @RequestMapping(value = {"/","/indexx"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/indexx"}, method = RequestMethod.GET)
     public String index(Model model) {
         final User user = userRepository.findById(0L).orElse(null);
         System.out.println(user);

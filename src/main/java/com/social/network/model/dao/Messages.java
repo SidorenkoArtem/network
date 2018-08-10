@@ -15,14 +15,11 @@ public class Messages {
     private Long id;
     @Column(name = "user_id")
     private Long userId;
-    @Column(name = "conversation_id")
-    private Long conversationId;
+    @Column(name = "receiver_user_id")
+    private Long receiverUserId;
     private String text;
     @Column(name = "file_url")
     private String fileUrl;
     @Column(name = "create_timestamp")
     private LocalDateTime createTimestamp;
-    @Column(name = "update_timestamp")
-    private LocalDateTime updateTimestamp;
-    private Boolean read;
 }

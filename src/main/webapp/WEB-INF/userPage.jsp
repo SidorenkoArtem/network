@@ -18,6 +18,23 @@
 <div>
     <p>"${otherUserPageData.user.photoUrl}"</p>
 </div>
+<c:if test = "${otherUserPageData.currentUser == false}">
+    <button id="writeMessage" onclick="openWindow()">Написать сообщение</button>
+    <script>
+        function openWindow() {
+            var request = {
+                receiverUserId: ${otherUserPageData.user.id},
+                text: "faded",
+                fileUrl: "/chtotoGdeto"
+            };
+            $.ajax({
+                url: "/user/messages",
+                method: "POST",
+                data: request
+            });
+        }
+    </script>
+</c:if>
 <c:if test="${otherUserPageData.socialGroups != null}">
     <div>
         <h1>Groups:</h1>

@@ -16,4 +16,5 @@ public class PageResponses {
     private Integer countSocialGroups;
     private List<UserFriendDto> friends;
     private Integer countFriends;
+    private Boolean currentUser;
 }

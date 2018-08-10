@@ -24,6 +24,29 @@ public class UserService {
     private final SocialGroupsService socialGroupsService;
     private final UserFriendsService userFriendsService;
 
+    @Transactional(readOnly = true)
+    public PageResponses getCurrentUserPage() {
+        final Long userId = 6L;//TODO take userId from context holder
+        final PageResponses pageResponses = new PageResponses();
+        final User user = userRepository.findById(userId).orElseThrow(UserNotExistsException::new);
+
+        pageResponses.setUser(ConvertUtil.convertToUserDto(user));
+
+        final UserGiftsResponse gifts = giftsService.getOtherUserGift(userId, DEFAULT_OFFSET, DEFAULT_GIFTS_LIMIT);
+        pageResponses.setGifts(gifts.getUserGifts());
+        pageResponses.setCountGift(gifts.getCount());
+
+        final SimpleSocialGroupsResponse groups = socialGroupsService.getSimpleSocialGroups(userId, DEFAULT_OFFSET, DEFAULT_SOCIAL_GROUPS_LIMIT);
+        pageResponses.setSocialGroups(groups.getSocialGroups());
+        pageResponses.setCountSocialGroups(groups.getCount());
+
+        final UserFriendsResponse userFriend = userFriendsService.getOtherUserFriends(userId, DEFAULT_OFFSET, DEFAULT_USER_FRIENDS_LIMIT);
+        pageResponses.setFriends(userFriend.getUserFriends());
+        pageResponses.setCountFriends(userFriend.getCount());
+        pageResponses.setCurrentUser(true);
+        return pageResponses;
+    }
+
     public void userRegistration(final UserRequest userRequest) {
         final User user = new User();
         if (userRepository.existsByLoginEquals(userRequest.getLogin())) {
@@ -120,6 +143,7 @@ public class UserService {
             pageResponses.setFriends(userFriend.getUserFriends());
             pageResponses.setCountFriends(userFriend.getCount());
         }
+        pageResponses.setCurrentUser(false);
         return pageResponses;
     }
 

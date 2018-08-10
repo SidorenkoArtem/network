@@ -1,6 +1,7 @@
 package com.social.network.rest;
 
 import com.social.network.model.requests.MessageRequest;
+import com.social.network.model.requests.MessagesRequest;
 import com.social.network.model.requests.UserRequest;
 import com.social.network.model.responces.UsersResponse;
 import com.social.network.services.*;
@@ -65,6 +66,13 @@ public class UserController {
     public ResponseEntity<Object> getMessages(@PathVariable(value = "userId") Long userId,
         @RequestParam(value = "offset", defaultValue = "0") Integer offset, @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
         return new ResponseEntity<>(messagesService.getMessages(userId, offset, limit), HttpStatus.OK);
+    }
+
+    @PostMapping("/messages")
+    @ApiOperation(value = "Send message")
+    public ResponseEntity<Object> sendMessage(@RequestBody MessageRequest messageRequest) {
+        messagesService.sendMessage(messageRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/conversations")

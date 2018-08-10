@@ -99,11 +99,9 @@ public class ConvertUtil {
         final MessagesDto messagesDto = new MessagesDto();
         messagesDto.setId(message.getId());
         messagesDto.setUserId(message.getUserId());
-        messagesDto.setConversationId(message.getConversationId());
         messagesDto.setFileUrl(message.getFileUrl());
         messagesDto.setText(message.getText());
         messagesDto.setCreateTimestamp(message.getCreateTimestamp());
-        messagesDto.setUpdateTimestamp(message.getUpdateTimestamp());
         return messagesDto;
     }
 }
