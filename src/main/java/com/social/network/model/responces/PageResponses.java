@@ -17,4 +17,5 @@ public class PageResponses {
     private List<UserFriendDto> friends;
     private Integer countFriends;
     private Boolean currentUser;
+    private Boolean authenticated;
 }

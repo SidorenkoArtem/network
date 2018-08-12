@@ -104,4 +104,12 @@ public class ConvertUtil {
         messagesDto.setCreateTimestamp(message.getCreateTimestamp());
         return messagesDto;
     }
+
+    public static WallPostDto convertToWallPostDto(final WallPost wallPost, final User user) {
+        final WallPostDto wallPostDto = new WallPostDto();
+        wallPostDto.setText(wallPost.getText());
+        wallPostDto.setFileUrl(wallPost.getFileUrl());
+        wallPostDto.setUser(convertToSimpleUserDto(user));
+        return wallPostDto;
+    }
 }

@@ -5,12 +5,16 @@ import com.social.network.exceptions.LoginAlreadyExitstsException;
 import com.social.network.exceptions.UserNotExistsException;
 import com.social.network.model.dao.PagePermission;
 import com.social.network.model.dao.User;
+import com.social.network.model.dao.UserDetail;
 import com.social.network.model.dto.UserDto;
 import com.social.network.model.requests.UserRequest;
 import com.social.network.model.responces.*;
 import com.social.network.repositories.UserRepository;
 import com.social.network.utils.ConvertUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import static com.social.network.ApplicationConstants.*;
@@ -26,7 +30,9 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public PageResponses getCurrentUserPage() {
-        final Long userId = 6L;//TODO take userId from context holder
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetail userDetail = (UserDetail) authentication.getPrincipal();
+        final Long userId = userDetail.getUserId();
         final PageResponses pageResponses = new PageResponses();
         final User user = userRepository.findById(userId).orElseThrow(UserNotExistsException::new);
 
@@ -44,6 +50,7 @@ public class UserService {
         pageResponses.setFriends(userFriend.getUserFriends());
         pageResponses.setCountFriends(userFriend.getCount());
         pageResponses.setCurrentUser(true);
+        pageResponses.setAuthenticated(true);
         return pageResponses;
     }
 
@@ -53,7 +60,8 @@ public class UserService {
             throw new LoginAlreadyExitstsException();
         }
         user.setLogin(userRequest.getLogin());
-        user.setPassword(userRequest.getPassword());
+        user.setPassword(new BCryptPasswordEncoder()
+                .encode(userRequest.getPassword()));
         user.setFirstName(userRequest.getFirstName());
         user.setName(userRequest.getName());
         user.setSurname(userRequest.getSurname());
@@ -65,6 +73,8 @@ public class UserService {
         user.setEmail(userRequest.getEmail());
         user.setPhotoUrl(userRequest.getPhotoUrl());
         user.setRole(userRequest.getRole());
+        user.setCountry(userRequest.getCountry());
+        user.setCity(userRequest.getCity());
         userRepository.save(user);
         final PagePermission pagePermission = new PagePermission();
         pagePermission.setUserId(user.getId());
@@ -115,11 +125,13 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public PageResponses getUserPage(final Long userId) {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final PageResponses pageResponses = new PageResponses();
         final User user = userRepository.findById(userId).orElseThrow(UserNotExistsException::new);
         final PagePermission pagePermission = user.getPagePermission();
 
         pageResponses.setUser(ConvertUtil.convertToUserDto(user));
+        pageResponses.setAuthenticated(!authentication.getPrincipal().toString().equalsIgnoreCase("anonymousUser"));
 
         if (!pagePermission.getShowLocation()) {
             pageResponses.getUser().setCountry(null);
@@ -144,24 +156,6 @@ public class UserService {
             pageResponses.setCountFriends(userFriend.getCount());
         }
         pageResponses.setCurrentUser(false);
-        return pageResponses;
-    }
-
-    @Transactional(readOnly = true)
-    public PageResponses getCurrentPageResponses() {
-        final Long userId = 6L;//ContextHolder
-        final PageResponses pageResponses = new PageResponses();
-        final User user = userRepository.findById(userId).orElseThrow(UserNotExistsException::new);
-        final UserGiftsResponse gifts = giftsService.getOtherUserGift(userId, DEFAULT_OFFSET, DEFAULT_GIFTS_LIMIT);
-        final SimpleSocialGroupsResponse groups = socialGroupsService.getSimpleSocialGroups(userId, DEFAULT_OFFSET, DEFAULT_SOCIAL_GROUPS_LIMIT);
-        final UserFriendsResponse userFriend = userFriendsService.getOtherUserFriends(userId, DEFAULT_OFFSET, DEFAULT_USER_FRIENDS_LIMIT);
-        pageResponses.setUser(ConvertUtil.convertToUserDto(user));
-        pageResponses.setGifts(gifts.getUserGifts());
-        pageResponses.setCountGift(gifts.getCount());
-        pageResponses.setSocialGroups(groups.getSocialGroups());
-        pageResponses.setCountSocialGroups(groups.getCount());
-        pageResponses.setFriends(userFriend.getUserFriends());
-        pageResponses.setCountFriends(userFriend.getCount());
         return pageResponses;
     }
 

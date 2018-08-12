@@ -8,26 +8,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <body>
-<div>
-    <div>
-        <input
-                placeholder="${user.name}"
-                id="search"/>
-    </div>
-    <div>
-        <div>
-            <img width="100" src="favicon.ico"/>
-        </div>
-        <div>
-            <input type="button" value="Редактировать"/>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+            Поиск друзей
+        </div >
+        <div class="col-sm-3">
+            Поиск групп
         </div>
     </div>
-    <div >
-    </div>
-
 </div>
 </body>
-<script>
-
-</script>
 </html>
