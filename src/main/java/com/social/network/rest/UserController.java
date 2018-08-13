@@ -12,13 +12,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import javax.validation.Valid;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
 @Api(tags = "User-Controller")
 public class UserController {
+
+    private static String UPLOADED_FOLDER = "I://";
 
     private final UsersService usersService;
     private final MessagesService messagesService;
@@ -95,6 +106,34 @@ public class UserController {
         return new ResponseEntity<>(userGroupsService.getOtherUserGroups(userId, page, limit), HttpStatus.OK);
     }
 
-    //@PostMapping("/")
+    @PostMapping("/image")
+    @ApiOperation(value = "Upload file")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+        if (file.isEmpty()) {
+            return new ResponseEntity<>("Pleas, load file", HttpStatus.OK);
+        }
+
+        System.out.println("begin");
+
+        try {
+            saveUploadFile(Arrays.asList(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(file.getOriginalFilename());
+        return new ResponseEntity<>("ok",HttpStatus.OK);
+    }
+
+    public void saveUploadFile(final List<MultipartFile> files) throws IOException {
+        for (MultipartFile file : files) {
+            if (file.isEmpty()) {
+                continue;
+            }
+            byte[] bytes = file.getBytes();
+            Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
+            Files.write(path, bytes);
+        }
+
+    }
 
 }

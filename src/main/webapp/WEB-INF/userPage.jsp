@@ -8,6 +8,10 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 </head>
 <body>
+<form method="POST" action="/user/image" enctype="multipart/form-data">
+    <input type="file" name="file" /><br/><br/>
+    <input type="submit" value="Submit" />
+</form>
 <div>
     <jsp:include page="mainMenu.jsp"/>
 </div>
@@ -56,7 +60,6 @@
                         $("#removeFromFriend").hide();
                         $.ajax({
                             url:"/user/${otherUserPageData.user.id}/friends",
-
                             type:"post"
                         });
                     }
