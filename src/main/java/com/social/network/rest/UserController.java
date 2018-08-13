@@ -1,5 +1,6 @@
 package com.social.network.rest;
 
+import com.social.network.model.enums.Status;
 import com.social.network.model.requests.MessageRequest;
 import com.social.network.model.requests.UserRequest;
 import com.social.network.model.responces.SimpleSocialGroupsResponse;
@@ -61,9 +62,30 @@ public class UserController {
 
     @GetMapping("/{userId}/friends")
     @ApiOperation(value = "Get user friends", response = UserFriendsResponse.class)
-    public ResponseEntity<Object> getUserFriend(@PathVariable(name = "userId") Long userId,
+    public ResponseEntity<Object> getUserFriend(@PathVariable(value = "userId") Long userId, @RequestParam(name = "status", defaultValue = "APPROVED")Status status,
                                         @RequestParam(name = "page", defaultValue = "0") Integer page, @RequestParam(name = "limit", defaultValue = "5") Integer limit) {
-        return new ResponseEntity<>(userFriendsService.getFriends(userId, page, limit), HttpStatus.OK);
+        return new ResponseEntity<>(userFriendsService.getFriends(userId, status, page, limit), HttpStatus.OK);
+    }
+
+    @PostMapping("/{userId}/friends")
+    @ApiOperation(value = "Create request on friendship")
+    public ResponseEntity<String> requestOnFriendship(@PathVariable(value = "userId") Long userId) {
+        userFriendsService.createRequestOnFriendship(userId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/{userId}/friends")
+    @ApiOperation(value = "")
+    public ResponseEntity<String> processRequestOnFriendship(@PathVariable(value = "userId") Long userId, @RequestBody Status status) {
+        userFriendsService.changeRequestOnFriendship(userId, status);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/{userId}/friends")
+    @ApiOperation(value = "Deleting user from friends")
+    public ResponseEntity<String> deletingFromFriends(@PathVariable(name = "userId") Long userId) {
+        userFriendsService.deleteFriend(userId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/groups")
@@ -72,4 +94,7 @@ public class UserController {
             @RequestParam(name = "page", defaultValue = "0") Integer page, @RequestParam(name = "limit", defaultValue = "5") Integer limit) {
         return new ResponseEntity<>(userGroupsService.getOtherUserGroups(userId, page, limit), HttpStatus.OK);
     }
+
+    //@PostMapping("/")
+
 }

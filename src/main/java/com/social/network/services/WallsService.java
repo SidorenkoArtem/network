@@ -26,7 +26,7 @@ public class WallsService {
     private final UserRepository userRepository;
 
     public void createWallPost(final Long wallOwnerId, final WallRequest wallRequest) {
-        final Long userId = 6L; //todo from Security context holder
+        final Long userId = 6L; //todo
         final WallPost wallPost = new WallPost();
         wallPost.setText(wallRequest.getText());
         wallPost.setFileUrl(wallRequest.getFileUrl());
@@ -40,10 +40,10 @@ public class WallsService {
                 wallOwnerId, PageRequest.of(page, limit, Sort.by(Sort.Order.desc("createTimestamp"))));
         final Set<Long> userIds = posts.stream().map(WallPost::getUserId).collect(Collectors.toSet());
         final Map<Long, User> userUdAndUserMap = userRepository.findUsersByIdIn(userIds).stream().collect(Collectors.toMap(User::getId, Function.identity()));
-        return new WallPostsResponse(posts.stream().map(e ->{
-                    final Long userId = e.getUserId();
-                    return ConvertUtil.convertToWallPostDto(e, userUdAndUserMap.getOrDefault(userId, new User()));
-                }).collect(Collectors.toList()),
-            wallRepository.countWallPostsByWallOwnerIdEquals(wallOwnerId));
+        return new WallPostsResponse(posts.stream().map(e -> {
+            final Long userId = e.getUserId();
+            return ConvertUtil.convertToWallPostDto(e, userUdAndUserMap.getOrDefault(userId, new User()));
+        }).collect(Collectors.toList()),
+                wallRepository.countWallPostsByWallOwnerIdEquals(wallOwnerId));
     }
 }

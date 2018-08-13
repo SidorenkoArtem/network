@@ -18,4 +18,6 @@ public class PageResponses {
     private Integer countFriends;
     private Boolean currentUser;
     private Boolean authenticated;
+    private Boolean hasRequestOnFriendship;
+    private Boolean friend;
 }

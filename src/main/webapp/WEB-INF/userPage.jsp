@@ -43,7 +43,34 @@
         <div class="col-sm-3">
             <c:if test = "${otherUserPageData.currentUser == false && otherUserPageData.authenticated}">
                 <button id="writeMessage" onclick="openWindow()">Написать сообщение</button>
+                <c:if test="${otherUserPageData.hasRequestOnFriendship == false}">
+
+                    <button id="addToFriend" onclick="addToFriend()">Добавить в друзья</button>
+
+                </c:if>
+                <c:if test="${otherUserPageData.hasRequestOnFriendship && otherUserPageData.friend}">
+                    <button id="removeFromFriend" onclick="removeFriend()">Удалить из друзей</button>
+                </c:if>
                 <script>
+                    function addToFriend() {
+                        $("#removeFromFriend").hide();
+                        $.ajax({
+                            url:"/user/${otherUserPageData.user.id}/friends",
+
+                            type:"post"
+                        });
+                    }
+
+                    function removeFriend(){
+                        $("#removeFromFriend").hide();
+                        $.ajax({
+                            url: "/user/${otherUserPageData.user.id}/friends",
+                            type:"delete",
+                            success: function(result) {
+                                console.log(result);
+                            }
+                        });
+                    }
                     function openWindow() {
                         var request = JSON.stringify({
                             receiverUserId: "${otherUserPageData.user.id}",
@@ -62,7 +89,7 @@
             </c:if>
             <c:if test="${otherUserPageData.socialGroups != null}">
                 <div>
-                    <h1>Groups:</h1>
+                    <a href="/user/friends/${otherUserPageData.user.id}"><h3>Groups:</h3></a>
                     <c:forEach var="group" items="${otherUserPageData.socialGroups}">
                         <a href="/groups/${group.id}">
                             <div>
@@ -75,7 +102,7 @@
             </c:if>
             <c:if test="${otherUserPageData.friends != null}">
                 <div>
-                    <h1>Friends:</h1>
+                    <a href="/user/friends/${otherUserPageData.user.id}"><h3>Friends:</h3></a>
                     <c:forEach var="friend" items="${otherUserPageData.friends}">
                         <a href="/${friend.friend.userId}">
                             <div>
@@ -99,6 +126,53 @@
             </c:if>
         </div>
         <div class="col-sm-6">
+            <c:if test="${otherUserPageData.user.showWall}">
+                <c:if test="${otherUserPageData.authenticated}">
+                    <input type="text" placeholder="Введите сообщение"/>
+                </c:if>
+                <div id="wall">
+                    <input id="loadPosts" type="button" onclick="addElements()"></div>
+                </div>
+                <script>
+                    var page = 0;
+                    var count = 0;
+
+                    function addElements() {
+                        console.log("до ajax");
+                        $.ajax({
+                            url:"/wall/user/${otherUserPageData.user.id}",
+                            method:"GET",
+                            success: function (response) {
+                                var posts = response.posts;
+                                console.log(response);
+                                console.log(response.posts);
+                                posts.forEach(function(el) {
+                                    var domElement =
+                                        "<div class=\"container\">" +
+                                                "<div class=\"row\">" +
+                                                    "<div class=\"col-sm-2\">" +
+                                                        "<img src=\" + el.user.photoUrl + \">" +
+                                                    "</div>" +
+                                                    "<div class=\"col-sm-6\">" +
+                                                        "<p>" + el.user.firstName + " " + el.user.name + "</p>" +
+                                                    "</div>" +
+                                                "</div>" +
+                                                "<div class=\"row\">" +
+                                                    "<p>" + el.text + "</p>" +
+                                                "</div>" +
+                                        "</div>";
+                                    $("#wall").append(domElement);
+                                    count++;
+                                    if (count === response.count) {
+                                        $("#loadPosts").hide();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    page++;
+                </script>
+            </c:if>
         </div>
     </div>
 </div>

@@ -18,7 +18,8 @@ public enum  ErrorCode {
     NEED_TOKEN(10, "Need token"),
     INVALID_TOKEN(11, "Invalid token"),
     EMAIL_ALREADY_EXISTS(12, "User with this email already exists"),
-    LOGIN_ALREADY_EXISTS(13, "User with this login already exists");
+    LOGIN_ALREADY_EXISTS(13, "User with this login already exists"),
+    RELATIONSHIP_NOT_EXIST(14, "Relationship does not exist");
 
     private final int errorCode;
     private final String message;

@@ -23,7 +23,6 @@
                     var domElement = '<div><a href="/' + el.id + '"> <img src="'+ el.imageUrl +
                         '"></div><p>' + el.name + ' ' + '</p>';
                     $("#groupsContainer").append(domElement);
-                   console.log(el);
                    count++;
                    if (count === response.count) {
                        $("#loadGroups").hide();

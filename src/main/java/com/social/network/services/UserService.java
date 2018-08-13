@@ -1,14 +1,17 @@
 package com.social.network.services;
 
+import com.social.network.configuration.ContextHolder;
 import com.social.network.exceptions.EmailAlreadyExistException;
 import com.social.network.exceptions.LoginAlreadyExitstsException;
 import com.social.network.exceptions.UserNotExistsException;
 import com.social.network.model.dao.PagePermission;
 import com.social.network.model.dao.User;
-import com.social.network.model.dao.UserDetail;
+import com.social.network.model.dao.UserFriends;
 import com.social.network.model.dto.UserDto;
+import com.social.network.model.enums.Status;
 import com.social.network.model.requests.UserRequest;
 import com.social.network.model.responces.*;
+import com.social.network.repositories.UserFriendsRepository;
 import com.social.network.repositories.UserRepository;
 import com.social.network.utils.ConvertUtil;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +30,11 @@ public class UserService {
     private final GiftsService giftsService;
     private final SocialGroupsService socialGroupsService;
     private final UserFriendsService userFriendsService;
+    private final UserFriendsRepository userFriendsRepository;
 
     @Transactional(readOnly = true)
     public PageResponses getCurrentUserPage() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetail userDetail = (UserDetail) authentication.getPrincipal();
-        final Long userId = userDetail.getUserId();
+        final Long userId = ContextHolder.userId();
         final PageResponses pageResponses = new PageResponses();
         final User user = userRepository.findById(userId).orElseThrow(UserNotExistsException::new);
 
@@ -89,7 +91,7 @@ public class UserService {
     }
 
     public UserResponse updateUser(final UserRequest userRequest) {
-        final Long userId = 6L;
+        final Long userId = ContextHolder.userId();
         final User currentUser = userUpdate(userRequest, userId);
         return new UserResponse(ConvertUtil.convertToUserDto(currentUser));
     }
@@ -129,9 +131,18 @@ public class UserService {
         final PageResponses pageResponses = new PageResponses();
         final User user = userRepository.findById(userId).orElseThrow(UserNotExistsException::new);
         final PagePermission pagePermission = user.getPagePermission();
-
+        final Boolean anonymous = authentication.getPrincipal().toString().equalsIgnoreCase("anonymousUser");
         pageResponses.setUser(ConvertUtil.convertToUserDto(user));
-        pageResponses.setAuthenticated(!authentication.getPrincipal().toString().equalsIgnoreCase("anonymousUser"));
+        pageResponses.setAuthenticated(!anonymous);
+
+        if (!anonymous) {
+            final Long currentUserId = ContextHolder.userId();
+            final UserFriends relationship = userFriendsRepository.getRelationship(userId, currentUserId).orElse(null);
+            pageResponses.setHasRequestOnFriendship(relationship != null);
+            if (relationship != null) {
+                pageResponses.setFriend(relationship.getStatus().equals(Status.APPROVED));
+            }
+        }
 
         if (!pagePermission.getShowLocation()) {
             pageResponses.getUser().setCountry(null);
@@ -156,6 +167,7 @@ public class UserService {
             pageResponses.setCountFriends(userFriend.getCount());
         }
         pageResponses.setCurrentUser(false);
+        System.out.println(pageResponses);
         return pageResponses;
     }
 

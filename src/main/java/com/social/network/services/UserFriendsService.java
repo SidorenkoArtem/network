@@ -1,5 +1,7 @@
 package com.social.network.services;
 
+import com.social.network.configuration.ContextHolder;
+import com.social.network.exceptions.RelationNotExistsException;
 import com.social.network.exceptions.RequestOnFriendshipNotExists;
 import com.social.network.model.dao.User;
 import com.social.network.model.dao.UserFriends;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.management.relation.RelationException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -56,37 +59,41 @@ public class UserFriendsService {
         return userFriendIds;
     }
 
-    public void addRequestOnFriendship(final UserFriendsRequest request) {
-        final Long userId = 0L;//TODO
+    @Transactional
+    public void createRequestOnFriendship(final Long userId) {
+        final Long currentUserId = ContextHolder.userId();
         final UserFriends requestOnFriendship = new UserFriends();
-        requestOnFriendship.setUserId(userId);
-        requestOnFriendship.setFriendId(request.getFriendId());
+        requestOnFriendship.setUserId(currentUserId);
+        requestOnFriendship.setFriendId(userId);
         requestOnFriendship.setStatus(Status.REQUESTED);
         userFriendsRepository.save(requestOnFriendship);
     }
 
+    @Transactional
     public void changeRequestOnFriendship(final Long userId, final Status status) {
-        final Long friendId = 0L;//TODO
+        final Long friendId = ContextHolder.userId();
         final UserFriends requestOnFriendship = userFriendsRepository.findUserFriendsByUserIdEqualsAndFriendIdEquals(userId, friendId)
                 .orElseThrow(RequestOnFriendshipNotExists::new);
         requestOnFriendship.setStatus(status);
         userFriendsRepository.save(requestOnFriendship);
     }
 
-    public void deleteRequestOnFriendship(final Long userId) {//TODO all method
-        final Long currentUserId = 0L;//TODO
-
-        //userFriendsRepository.delete();
-    }
-
     @Transactional(readOnly = true)
-    public UserFriendsResponse getFriends(final Long userId, final Integer page, final Integer limit) {
+    public UserFriendsResponse getFriends(final Long userId, final Status status, final Integer page, final Integer limit) {
         final List<UserFriends> userFriends = userFriendsRepository.findUserFriendsByUserIdEqualsOrFriendIdEqualsAndStatusEquals(
-                userId, userId, Status.APPROVED, PageRequest.of(page, limit, Sort.by(Sort.Order.desc("createTimestamp"))));
+                userId, userId, status, PageRequest.of(page, limit, Sort.by(Sort.Order.desc("createTimestamp"))));
         final Set<Long> userFriendIds = getUserFriendIds(userFriends, userId);
         final List<User> users = userRepository.findUsersByIdIn(userFriendIds);
-        return new UserFriendsResponse(users.stream().map(e -> ConvertUtil.convertToUserFriendDto(userId, e))
-                .collect(Collectors.toList()),
+        return new UserFriendsResponse(users.stream().map(e -> ConvertUtil.convertToUserFriendDto(userId, e)).collect(Collectors.toList()),
                 userFriendsRepository.countByUserIdEqualsOrFriendIdEqualsAndStatusEquals(userId, userId, Status.APPROVED));
+    }
+
+    @Transactional
+    public void deleteFriend(final Long userId) {
+        final Long currentUserId = ContextHolder.userId();
+        final UserFriends relationship = userFriendsRepository.getRelationship(userId, currentUserId)
+                .orElseThrow(RelationNotExistsException::new);
+        userFriendsRepository.delete(relationship);
+
     }
 }
