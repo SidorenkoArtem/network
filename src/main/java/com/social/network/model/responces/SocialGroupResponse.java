@@ -11,4 +11,5 @@ public class SocialGroupResponse {
     private final SocialGroupDto socialGroup;
     private final List<SimpleUserDto> users;
     private final Integer usersCount;
+    private final Boolean subscriber;
 }

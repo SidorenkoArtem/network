@@ -1,19 +1,19 @@
 package com.social.network.repositories;
 
-import com.social.network.model.dao.Conversation;
+import com.social.network.model.dao.UserConversation;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-
+import org.springframework.stereotype.Repository;
 import java.util.List;
-import java.util.Optional;
 
-public interface ConversationRepository extends CrudRepository<Conversation, Long> {
-    @Query("Select conversation from Conversation conversation where (conversation.userId = ?1 and " +
-    "conversation.userIdInterlocutor = ?2) or (conversation.userId = ?2 and conversation.userIdInterlocutor = ?1)")
-    Optional<Conversation> getUserConversation(final Long currentUserId, final Long userId);
+@Repository
+public interface ConversationRepository extends CrudRepository<UserConversation, Long> {
+    @Query(value = "select conversation from UserConversation conversation " +
+            "where conversation.companionUserId = ?1 or conversation.creatorUserId = ?1")
+    List<UserConversation> getConversationByUserId(final Long userId, final Pageable pageable);
 
-    List<Conversation> findConversationsByUserIdEqualsOrUserIdInterlocutorEquals(final Long userId, final Long userIdd, final Pageable pageable);
-
-    int countByUserIdEqualsOrUserIdInterlocutorEquals(final Long userId, final Long userIdd);
+    @Query(value = "select count(conversation) from UserConversation conversation " +
+            "where conversation.companionUserId = ?1 or conversation.creatorUserId = ?1")
+    int getConversationByUserIdCount(final Long userId);
 }

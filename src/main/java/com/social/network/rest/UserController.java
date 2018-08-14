@@ -1,5 +1,6 @@
 package com.social.network.rest;
 
+import com.social.network.configuration.ContextHolder;
 import com.social.network.model.enums.Status;
 import com.social.network.model.requests.MessageRequest;
 import com.social.network.model.requests.UserRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.net.ContentHandler;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -64,12 +66,19 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}/messages")
-    @ApiOperation(value = "Get messages by user")
-    public ResponseEntity<Object> getMessages(@PathVariable(value = "userId") Long userId,
-                                              @RequestParam(value = "page", defaultValue = "0") Integer offset, @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
-        return new ResponseEntity<>(messagesService.getMessages(userId, offset, limit), HttpStatus.OK);
+    @GetMapping("/conversations")
+    @ApiOperation(value = "Get conversation")
+    public ResponseEntity<Object> getConversations(@RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
+        return new ResponseEntity<>(messagesService.getConversations(page, limit), HttpStatus.OK);
     }
+
+//    @GetMapping("/{userId}/messages")
+//    @ApiOperation(value = "Get messages by user")
+//    public ResponseEntity<Object> getMessages(@PathVariable(value = "userId") Long userId,
+//            @RequestParam(value = "page", defaultValue = "0") Integer offset, @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
+//        return new ResponseEntity<>(messagesService.getMessages(userId, offset, limit), HttpStatus.OK);
+//    }
 
     @GetMapping("/{userId}/friends")
     @ApiOperation(value = "Get user friends", response = UserFriendsResponse.class)
@@ -106,15 +115,26 @@ public class UserController {
         return new ResponseEntity<>(userGroupsService.getOtherUserGroups(userId, page, limit), HttpStatus.OK);
     }
 
+    @PostMapping("/groups/{groupId}")
+    @ApiOperation(value = "Sign to group")
+    public ResponseEntity<String> signToGroup(@PathVariable(value = "groupId") Long groupId) {
+        userGroupsService.createRequestToGroup(groupId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/groups/{groupId}")
+    @ApiOperation(value = "Delete from group")
+    public ResponseEntity<String> deleteUserGroup(@PathVariable(value = "groupId") Long groupId) {
+        userGroupsService.deleteSocialGroup(groupId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PostMapping("/image")
     @ApiOperation(value = "Upload file")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
         if (file.isEmpty()) {
-            return new ResponseEntity<>("Pleas, load file", HttpStatus.OK);
+            return new ResponseEntity<>("Please, load file", HttpStatus.OK);
         }
-
-        System.out.println("begin");
-
         try {
             saveUploadFile(Arrays.asList(file));
         } catch (IOException e) {
