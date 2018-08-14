@@ -1,5 +1,6 @@
 package com.social.network.services;
 
+import com.social.network.configuration.ContextHolder;
 import com.social.network.model.dao.User;
 import com.social.network.model.dao.WallPost;
 import com.social.network.model.requests.WallRequest;
@@ -26,7 +27,7 @@ public class WallsService {
     private final UserRepository userRepository;
 
     public void createWallPost(final Long wallOwnerId, final WallRequest wallRequest) {
-        final Long userId = 6L; //todo
+        final Long userId = ContextHolder.userId();
         final WallPost wallPost = new WallPost();
         wallPost.setText(wallRequest.getText());
         wallPost.setFileUrl(wallRequest.getFileUrl());

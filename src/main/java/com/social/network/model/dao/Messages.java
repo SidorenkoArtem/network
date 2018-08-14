@@ -15,8 +15,8 @@ public class Messages {
     private Long id;
     @Column(name = "user_id")
     private Long userId;
-    @Column(name = "receiver_user_id")
-    private Long receiverUserId;
+    @Column(name = "conversation_id")
+    private Long conversationId;
     private String text;
     @Column(name = "file_url")
     private String fileUrl;

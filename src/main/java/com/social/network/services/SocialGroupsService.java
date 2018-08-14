@@ -1,6 +1,7 @@
 package com.social.network.services;
 
 import com.social.network.ApplicationConstants;
+import com.social.network.configuration.ContextHolder;
 import com.social.network.exceptions.SocialGroupNotExistException;
 import com.social.network.model.dao.SocialGroup;
 import com.social.network.model.dao.User;
@@ -41,6 +42,7 @@ public class SocialGroupsService {
     }
 
     public SocialGroupResponse getSocialGroup(final Long socialGroupId) {
+        final Long userId = ContextHolder.userId();
         final SocialGroup socialGroup = socialGroupRepository.findById(socialGroupId)
                 .orElseThrow(SocialGroupNotExistException::new);
 
@@ -54,6 +56,8 @@ public class SocialGroupsService {
         final Set<Long> userIds = userGroups.stream().map(UserGroup::getUserId).collect(Collectors.toSet());
         final List<User> users = userRepository.findUsersByIdIn(userIds);
         final List<SimpleUserDto> userDtos = users.stream().map(ConvertUtil::convertToSimpleUserDto).collect(Collectors.toList());
-        return new SocialGroupResponse(socialGroupDto, userDtos, usersCount);
+        final Boolean subscriber = userGroupRepository.findUserGroupByUserIdEqualsAndGroupIdEquals(userId, socialGroupId)
+                .orElse(null) != null;
+        return new SocialGroupResponse(socialGroupDto, userDtos, usersCount, subscriber);
     }
 }

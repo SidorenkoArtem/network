@@ -1,8 +1,11 @@
 package com.social.network.controllers;
 
+import com.social.network.configuration.ContextHolder;
 import com.social.network.rest.BaseController;
 import com.social.network.services.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class UserPageController implements BaseController {
 
     private final UserService userService;
+    private final SocialGroupsService socialGroupsService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String currentPage(final Model model) {
@@ -23,6 +27,13 @@ public class UserPageController implements BaseController {
 
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
     public String userPage(final Model model, @PathVariable(name = "userId") Long userId) {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final Boolean anonymous = authentication.getPrincipal().toString().equalsIgnoreCase("anonymousUser");
+        if (!anonymous) {
+            if (userId.equals(ContextHolder.userId())) {
+                return "forward:/";
+            }
+        }
         model.addAttribute("otherUserPageData", userService.getUserPage(userId));
         return "userPage";
     }
@@ -34,8 +45,19 @@ public class UserPageController implements BaseController {
     }
 
     @RequestMapping(value = "/user/groups/{userId}")
-    public String groupPage(final Model model, @PathVariable(name = "userId") Long userId) {
+    public String groupsPage(final Model model, @PathVariable(name = "userId") Long userId) {
         model.addAttribute("userId", userId);
         return "groupsPage";
+    }
+
+    @RequestMapping(value = "/group/{groupId}", method = RequestMethod.GET)
+    public String groupPage(final Model model, @PathVariable(name = "groupId") Long groupId) {
+        model.addAttribute("groupData", socialGroupsService.getSocialGroup(groupId));
+        return "GroupPage";
+    }
+
+    @RequestMapping(value = "/messages", method = RequestMethod.GET)
+    public String messagePage(final Model model) {
+        return "ConversationsPage";
     }
 }

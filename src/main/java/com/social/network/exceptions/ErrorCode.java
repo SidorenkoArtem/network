@@ -19,7 +19,8 @@ public enum  ErrorCode {
     INVALID_TOKEN(11, "Invalid token"),
     EMAIL_ALREADY_EXISTS(12, "User with this email already exists"),
     LOGIN_ALREADY_EXISTS(13, "User with this login already exists"),
-    RELATIONSHIP_NOT_EXIST(14, "Relationship does not exist");
+    RELATIONSHIP_NOT_EXIST(14, "Relationship does not exist"),
+    REQUEST_TO_SOCIAL_GROUP_ALREADY_EXISTS(15, "Request to social group already exists");
 
     private final int errorCode;
     private final String message;

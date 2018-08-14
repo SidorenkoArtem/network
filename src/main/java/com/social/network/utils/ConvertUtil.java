@@ -85,16 +85,6 @@ public class ConvertUtil {
         return userGiftDto;
     }
 
-    public static ConversationDto convertToConversationDto(final Conversation conversation) {
-        final ConversationDto conversationDto = new ConversationDto();
-        conversationDto.setId(conversation.getId());
-        conversationDto.setUserId(conversation.getUserId());
-        conversationDto.setUserIdInterlocutor(conversation.getUserIdInterlocutor());
-        conversationDto.setCreateTimestamp(conversation.getCreateTimestamp());
-        conversationDto.setUpdateTimestamp(conversation.getUpdateTimestamp());
-        return conversationDto;
-    }
-
     public static MessagesDto convertToMessagesDto(final Messages message) {
         final MessagesDto messagesDto = new MessagesDto();
         messagesDto.setId(message.getId());
@@ -112,4 +102,18 @@ public class ConvertUtil {
         wallPostDto.setUser(convertToSimpleUserDto(user));
         return wallPostDto;
     }
+
+    public static ConversationDto convertToConversationDto(final UserConversation userConversation, final User creator, final User companion) {
+        final ConversationDto conversation = new ConversationDto();
+        conversation.setId(userConversation.getId());
+        conversation.setCreatorConversation(convertToSimpleUserDto(creator));
+        conversation.setCompanionConversation(convertToSimpleUserDto(companion));
+        return conversation;
+    }
+
+//    public static SimpleMessageDto convertToSimpleMessageDto(final Messages messages) {
+//        final SimpleMessageDto simpleMessageDto = new SimpleMessageDto();
+//        //simpleMessageDto.setText(messages.getText());
+//        return simpleMessageDto;
+//    }
 }

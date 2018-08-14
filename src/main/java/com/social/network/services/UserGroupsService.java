@@ -1,8 +1,9 @@
 package com.social.network.services;
 
+import com.social.network.configuration.ContextHolder;
 import com.social.network.exceptions.RequestToGroupNotExistException;
+import com.social.network.exceptions.RequestToSocialGroupAlreadyExistException;
 import com.social.network.exceptions.SocialGroupNotExistException;
-import com.social.network.exceptions.UserGroupNotExistException;
 import com.social.network.model.dao.SocialGroup;
 import com.social.network.model.dao.UserGroup;
 import com.social.network.model.enums.Status;
@@ -27,16 +28,9 @@ public class UserGroupsService {
     private final SocialGroupRepository socialGroupRepository;
 
     @Transactional(readOnly = true)
-    public SimpleSocialGroupsResponse getCurrentUserGroups(final Integer offset, final Integer limit) {
-        final Long userId = 0L; //TODO
-        return getUserGroups(userId, offset, limit);
-    }
-
-    @Transactional(readOnly = true)
     public SimpleSocialGroupsResponse getOtherUserGroups(final Long userId, final Integer page, final Integer limit) {
         return getUserGroups(userId, page, limit);
     }
-
 
     private SimpleSocialGroupsResponse getUserGroups(final Long userId,final Integer page, final Integer limit) {
         final List<UserGroup> userGroups = userGroupRepository.findSocialGroupsByUserIdEquals(userId, PageRequest.of(page, limit, Sort.by(Sort.Order.desc("createTimestamp"))));
@@ -48,32 +42,29 @@ public class UserGroupsService {
 
     @Transactional
     public void createRequestToGroup(final Long groupId) {
-        final Long userId = 0L;
-        final SocialGroup socialGroup = socialGroupRepository.findById(groupId).orElseThrow(SocialGroupNotExistException::new);
+        checkSocialGroup(groupId);
+        final Long userId = ContextHolder.userId();
         final UserGroup userGroupRequest = new UserGroup();
+        if (userGroupRepository.findUserGroupByUserIdEqualsAndGroupIdEquals(userId, groupId).orElse(null) != null) {
+            throw new RequestToSocialGroupAlreadyExistException();
+        }
         userGroupRequest.setGroupId(groupId);
         userGroupRequest.setUserId(userId);
-        if (socialGroup.getPrivateGroup()) {
-            userGroupRequest.setStatus(Status.REQUESTED);
-        } else {
-            userGroupRequest.setStatus(Status.APPROVED);
-        }
+        userGroupRequest.setStatus(Status.APPROVED);
         userGroupRepository.save(userGroupRequest);
     }
 
     @Transactional
-    public void processUserToGroup(final Long groupId, final UserGroup request) {
-        final UserGroup userGroup = userGroupRepository.findUserGroupByUserIdEqualsAndGroupIdEquals(request.getUserId(), groupId)
-                .orElseThrow(RequestToGroupNotExistException::new);
-        userGroup.setStatus(request.getStatus());
-        userGroupRepository.save(userGroup);
-    }
-
-    @Transactional
-    public void removeFromUserGroup(final Long groupId) {
-        final Long userId = 0L;
+    public void deleteSocialGroup(final Long groupId) {
+        checkSocialGroup(groupId);
+        final Long userId = ContextHolder.userId();
         final UserGroup userGroup = userGroupRepository.findUserGroupByUserIdEqualsAndGroupIdEquals(userId, groupId)
-                .orElseThrow(UserGroupNotExistException::new);
+                .orElseThrow(RequestToGroupNotExistException::new);
         userGroupRepository.delete(userGroup);
     }
+
+    private void checkSocialGroup(final Long groupId) {
+        socialGroupRepository.findById(groupId).orElseThrow(SocialGroupNotExistException::new);
+    }
+
 }

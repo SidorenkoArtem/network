@@ -23,7 +23,7 @@ public class UsersService {
     private final UserRepository userRepository;
 
     public SocialGroupResponse getUserSocialGroups(final Long userId) {
-        return new SocialGroupResponse(null, null, null);
+        return new SocialGroupResponse(null, null, null, null);
     }
 
     public SimpleUsersResponse getUsers(final String searchText, final Integer offset, final Integer limit) {
