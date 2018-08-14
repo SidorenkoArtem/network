@@ -15,6 +15,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,7 +33,7 @@ public class MessagesService {
     private final UserRepository userRepository;
 
    public ConversationResponse getConversations(final Integer page, final Integer limit) {
-      final Long userId = 6L;//ContextHolder.userId();
+      final Long userId = ContextHolder.userId();
       final List<UserConversation> userConversations = conversationRepository.getConversationByUserId(userId,
              PageRequest.of(page, limit, Sort.by(Sort.Order.desc("updateTimestamp"))));
       final Set<Long> userCreatorIds = userConversations.stream().map(UserConversation::getCreatorUserId).collect(Collectors.toSet());
@@ -48,12 +51,28 @@ public class MessagesService {
           }).collect(Collectors.toList()), countConversation);
    }
 
+   private UserConversation newUserConversation(final Long creatorUserId, final Long companionUserId) {
+       final UserConversation conversation = new UserConversation();
+       conversation.setCreatorUserId(creatorUserId);
+       conversation.setCompanionUserId(companionUserId);
+       conversation.setCreateTimestamp(LocalDateTime.now());
+       conversationRepository.save(conversation);
+       return conversation;
+   }
+
+   @Transactional
     public void sendMessage(final MessageRequest messageRequest) {
         final Long userId = ContextHolder.userId();
+        final UserConversation userConversation = conversationRepository.getConversationByMember(userId, messageRequest.getReceiverUserId())
+                .orElse(newUserConversation(userId, messageRequest.getReceiverUserId()));
+        userConversation.setUpdateTimestamp(LocalDateTime.now());
+        conversationRepository.save(userConversation);
         final Messages message = new Messages();
         message.setUserId(userId);
+        message.setConversationId(userConversation.getId());
         message.setText(messageRequest.getText());
         message.setFileUrl(messageRequest.getFileUrl());
+        message.setCreateTimestamp(LocalDateTime.now());
         messagesRepository.save(message);
     }
 }
