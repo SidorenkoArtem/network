@@ -22,7 +22,7 @@
                 var conversations = result.conversations;
                 conversations.forEach(function (el) {
                     var domElement =
-                        "<a href=\"/user/group/" /*+ el.id */+ "\">" +// redirect user message page
+                        "<a href=\"/conversation/" + el.id + "\">" +
                             "<div class='row'>" +
                                 "<div class='col-sm-1'>" +
                                     "<img height=\"60\" width=\"60\" src=\"" + el.creatorConversation.photoUrl + "\"/>" +

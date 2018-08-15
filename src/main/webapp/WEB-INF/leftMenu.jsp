@@ -10,7 +10,7 @@
 <body>
 <ul>
     <li><a href="/">Моя страница</a></li>
-    <li><a>Мои сообщения()</a></li>
+    <li><a href="/conversations">Мои сообщения()</a></li>
 </ul>
 </body>
 </html>
