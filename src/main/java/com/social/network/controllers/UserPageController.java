@@ -56,8 +56,14 @@ public class UserPageController implements BaseController {
         return "GroupPage";
     }
 
-    @RequestMapping(value = "/messages", method = RequestMethod.GET)
-    public String messagePage(final Model model) {
+    @RequestMapping(value = "/conversations", method = RequestMethod.GET)
+    public String conversationPage(final Model model) {
         return "ConversationsPage";
+    }
+
+    @RequestMapping(value = "/conversation/{conversationId}", method = RequestMethod.GET)
+    public String messagePage(final Model model, @PathVariable(name = "conversationId") Long conversationId) {
+        model.addAttribute("conversationId", conversationId);
+        return "ConversationPage";
     }
 }

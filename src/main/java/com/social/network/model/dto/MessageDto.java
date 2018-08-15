@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Data
 public class MessageDto {
     private Long id;
-    private Long userId;
+    private SimpleUserDto user;
     private Long conversationId;
     private String text;
     private String fileUrl;

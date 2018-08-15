@@ -40,7 +40,7 @@
                     <div class="col-sm-1">
                         <img src="${user.photoUrl}" width="50" height="50"/>
                     </div>
-                    <div class="col-sm-50">
+                    <div class="col-sm-3">
                         <p><c:out value="${user.firstName}"/> <c:out value="${user.name}"/></p>
                     </div>
                 </a>

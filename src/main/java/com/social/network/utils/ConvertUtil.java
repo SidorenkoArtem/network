@@ -88,8 +88,7 @@ public class ConvertUtil {
     public static MessageDto convertToMessagesDto(final Messages message, final User user) {
         final MessageDto messageDto = new MessageDto();
         messageDto.setId(message.getId());
-        convertToSimpleUserDto(user);
-        messageDto.setUserId(message.getUserId());
+        messageDto.setUser(convertToSimpleUserDto(user));
         messageDto.setFileUrl(message.getFileUrl());
         messageDto.setText(message.getText());
         messageDto.setCreateTimestamp(message.getCreateTimestamp());

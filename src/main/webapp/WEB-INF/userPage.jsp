@@ -93,7 +93,7 @@
                 <div>
                     <a href="/user/friends/${otherUserPageData.user.id}"><h3>Groups:</h3></a>
                     <c:forEach var="group" items="${otherUserPageData.socialGroups}">
-                        <a href="/groups/${group.id}">
+                        <a href="/group/${group.id}">
                             <div>
                                 <img width="20" height="20" src="${group.imageUrl}"/>
                             </div>
