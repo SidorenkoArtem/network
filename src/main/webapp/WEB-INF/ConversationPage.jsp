@@ -38,7 +38,7 @@
                                     "<strong class=\"d-block text-gray-dark\">" + el.user.firstName + " " + el.user.name + "</strong>" +
                                 "</p>" +
                                 "<p>" +
-                                    el.text
+                                    el.text +
                                 "</p>" +
                             "</div>" +
                         "</a>";
