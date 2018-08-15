@@ -85,14 +85,15 @@ public class ConvertUtil {
         return userGiftDto;
     }
 
-    public static MessagesDto convertToMessagesDto(final Messages message) {
-        final MessagesDto messagesDto = new MessagesDto();
-        messagesDto.setId(message.getId());
-        messagesDto.setUserId(message.getUserId());
-        messagesDto.setFileUrl(message.getFileUrl());
-        messagesDto.setText(message.getText());
-        messagesDto.setCreateTimestamp(message.getCreateTimestamp());
-        return messagesDto;
+    public static MessageDto convertToMessagesDto(final Messages message, final User user) {
+        final MessageDto messageDto = new MessageDto();
+        messageDto.setId(message.getId());
+        convertToSimpleUserDto(user);
+        messageDto.setUserId(message.getUserId());
+        messageDto.setFileUrl(message.getFileUrl());
+        messageDto.setText(message.getText());
+        messageDto.setCreateTimestamp(message.getCreateTimestamp());
+        return messageDto;
     }
 
     public static WallPostDto convertToWallPostDto(final WallPost wallPost, final User user) {

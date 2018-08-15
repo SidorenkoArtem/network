@@ -11,4 +11,7 @@ import java.util.List;
 @Repository
 public interface MessagesRepository extends CrudRepository<Messages, Long> {
 
+    List<Messages> findMessagesByConversationIdEquals(final Long conversationId, final Pageable pageable);
+    int countMessagesByConversationIdEquals(final Long conversationId);
+
 }

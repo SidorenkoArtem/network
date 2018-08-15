@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class MessagesDto {
+public class MessageDto {
     private Long id;
     private Long userId;
     private Long conversationId;
