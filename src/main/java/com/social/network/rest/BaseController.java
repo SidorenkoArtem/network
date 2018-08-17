@@ -23,7 +23,4 @@ public interface BaseController {
     default void checkThatUserAuthenticated() {
 
     }
-
-    default void checkThatUserAdmin() {
-    }
 }

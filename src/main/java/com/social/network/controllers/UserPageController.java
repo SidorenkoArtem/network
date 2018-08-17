@@ -18,6 +18,7 @@ public class UserPageController implements BaseController {
 
     private final UserService userService;
     private final SocialGroupsService socialGroupsService;
+    private final MessagesService messagesService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String currentPage(final Model model) {
@@ -64,6 +65,7 @@ public class UserPageController implements BaseController {
     @RequestMapping(value = "/conversation/{conversationId}", method = RequestMethod.GET)
     public String messagePage(final Model model, @PathVariable(name = "conversationId") Long conversationId) {
         model.addAttribute("conversationId", conversationId);
+        model.addAttribute("receiverId", messagesService.getReceiverUserIdByConversation(conversationId));
         return "ConversationPage";
     }
 }

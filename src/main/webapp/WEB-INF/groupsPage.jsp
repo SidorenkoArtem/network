@@ -41,6 +41,7 @@
                 page++;
             }
         });
+        page++;
     }
 </script>
 

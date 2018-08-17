@@ -7,6 +7,7 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 </head>
 <body>
+<jsp:include page=".jsp"/>
 <div>
     <h1>${groupData.socialGroup.name}</h1>
     <p>${groupData.socialGroup.description}</p>

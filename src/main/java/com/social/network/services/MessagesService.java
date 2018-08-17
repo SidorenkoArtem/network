@@ -1,6 +1,8 @@
 package com.social.network.services;
 
 import com.social.network.configuration.ContextHolder;
+import com.social.network.controllers.BaseMvcController;
+import com.social.network.exceptions.ConversationNotExistsException;
 import com.social.network.exceptions.UserNotExistsException;
 import com.social.network.model.dao.Messages;
 import com.social.network.model.dao.User;
@@ -28,7 +30,7 @@ import static com.social.network.ApplicationConstants.*;
 
 @Service
 @RequiredArgsConstructor
-public class MessagesService {
+public class MessagesService implements BaseService {
 
     private final MessagesRepository messagesRepository;
     private final ConversationRepository conversationRepository;
@@ -77,6 +79,7 @@ public class MessagesService {
     }
 
     public MessagesResponse getConversationMessages(final Long conversationId, final Integer page, final Integer limit) {
+        checkUserConversation(conversationId);
         final List<Messages> messages = messagesRepository.findMessagesByConversationIdEquals(conversationId,
                 PageRequest.of(page, limit, Sort.by(Sort.Order.desc(CREATE_TIMESTAMP))));
         final Set<Long> messagesUserId = messages.stream().map(Messages::getUserId).collect(Collectors.toSet());
@@ -96,5 +99,19 @@ public class MessagesService {
         conversation.setCreateTimestamp(LocalDateTime.now());
         conversationRepository.save(conversation);
         return conversation;
+    }
+
+    public Long getReceiverUserIdByConversation(final Long conversationId) {
+        final UserConversation userConversation = conversationRepository.findById(conversationId).orElseThrow(ConversationNotExistsException::new);
+        if (!userConversation.getCreatorUserId().equals(ContextHolder.userId())) {
+            return userConversation.getCreatorUserId();
+        } else {
+            return userConversation.getCompanionUserId();
+        }
+    }
+
+    @Override
+    public ConversationRepository userConversationRepository() {
+        return conversationRepository;
     }
 }

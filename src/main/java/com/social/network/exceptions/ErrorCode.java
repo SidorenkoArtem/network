@@ -20,7 +20,9 @@ public enum  ErrorCode {
     EMAIL_ALREADY_EXISTS(12, "User with this email already exists"),
     LOGIN_ALREADY_EXISTS(13, "User with this login already exists"),
     RELATIONSHIP_NOT_EXIST(14, "Relationship does not exist"),
-    REQUEST_TO_SOCIAL_GROUP_ALREADY_EXISTS(15, "Request to social group already exists");
+    REQUEST_TO_SOCIAL_GROUP_ALREADY_EXISTS(15, "Request to social group already exists"),
+    CONVERSATION_NOT_EXISTS(16, "Conversation does not exist"),
+    USER_NOT_CONSISTS_IN_CONVERSATION(17, "User does not consist in conversation");
 
     private final int errorCode;
     private final String message;

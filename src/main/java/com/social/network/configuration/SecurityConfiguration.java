@@ -23,10 +23,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/{userId}", "/user").permitAll()
+                .antMatchers("/{userId}", "/user", "/images/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("/login").permitAll()
+                .formLogin().loginPage("/login").loginProcessingUrl("/{userId}").permitAll()
                 .and()
                 .csrf().disable()
                 .logout()

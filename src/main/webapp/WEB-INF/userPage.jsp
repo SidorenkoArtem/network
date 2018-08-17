@@ -7,19 +7,22 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-<form method="POST" action="/user/image" enctype="multipart/form-data">
-    <input type="file" name="file" /><br/><br/>
-    <input type="submit" value="Submit" />
-</form>
 <div>
     <jsp:include page="mainMenu.jsp"/>
 </div>
+<c:if test="${otherUserPageData.authenticated == false}">
+    <div>
+        <jsp:include page="login.jsp"/>
+    </div>
+</c:if>
 <div class="container">
     <div class="row">
         <div class="col-sm-3">
-            <div>
-                <jsp:include page="leftMenu.jsp"/>
-            </div>
+            <c:if test="${otherUserPageData.authenticated == true}">
+                <div>
+                    <jsp:include page="leftMenu.jsp"/>
+                </div>
+            </c:if>
         </div>
         <div class="col-sm-3">
             <img width="200" height="200" src="${otherUserPageData.user.photoUrl}"/>
@@ -139,8 +142,11 @@
                     var page = 0;
                     var count = 0;
 
+                    $(document).ready(function(){
+                        addElements();
+                    });
+
                     function addElements() {
-                        console.log("до ajax");
                         $.ajax({
                             url:"/wall/user/${otherUserPageData.user.id}",
                             method:"GET",
@@ -152,11 +158,14 @@
                                     var domElement =
                                         "<div class=\"container\">" +
                                                 "<div class=\"row\">" +
-                                                    "<div class=\"col-sm-2\">" +
-                                                        "<img src=\" + el.user.photoUrl + \">" +
+                                                    "<div class=\"col-sm-1\">" +
+                                                        "<img height=\"60\" width=\"60\" src=\" + el.user.photoUrl + \">" +
                                                     "</div>" +
                                                     "<div class=\"col-sm-6\">" +
-                                                        "<p>" + el.user.firstName + " " + el.user.name + "</p>" +
+                                                        "<div>" +
+                                                            "<p>" + el.user.firstName + " " + el.user.name + "</p>" +
+                                                        "</div>" +
+                                                        "<div>" +
                                                     "</div>" +
                                                 "</div>" +
                                                 "<div class=\"row\">" +
