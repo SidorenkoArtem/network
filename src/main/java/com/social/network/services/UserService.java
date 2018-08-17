@@ -39,7 +39,7 @@ public class UserService {
         final User user = userRepository.findById(userId).orElseThrow(UserNotExistsException::new);
 
         pageResponses.setUser(ConvertUtil.convertToUserDto(user));
-
+        pageResponses.getUser().setShowWall(true);
         final UserGiftsResponse gifts = giftsService.getOtherUserGift(userId, DEFAULT_OFFSET, DEFAULT_GIFTS_LIMIT);
         pageResponses.setGifts(gifts.getUserGifts());
         pageResponses.setCountGift(gifts.getCount());

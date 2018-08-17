@@ -1,6 +1,7 @@
 package com.social.network.model.dao;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -20,6 +21,7 @@ public class WallPost {
     private String text;
     @Column(name = "file_url")
     private String fileUrl;
+    @CreationTimestamp
     @Column(name = "create_timestamp")
     private LocalDateTime createTimestamp;
 }

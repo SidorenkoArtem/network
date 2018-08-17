@@ -1,9 +1,12 @@
 package com.social.network.services;
 
 import com.social.network.configuration.ContextHolder;
+import com.social.network.exceptions.UserNotExistsException;
 import com.social.network.model.dao.User;
 import com.social.network.model.dao.WallPost;
+import com.social.network.model.dto.WallPostDto;
 import com.social.network.model.requests.WallRequest;
+import com.social.network.model.responces.WallPostResponse;
 import com.social.network.model.responces.WallPostsResponse;
 import com.social.network.repositories.UserRepository;
 import com.social.network.repositories.WallRepository;
@@ -26,14 +29,15 @@ public class WallsService {
     private final WallRepository wallRepository;
     private final UserRepository userRepository;
 
-    public void createWallPost(final Long wallOwnerId, final WallRequest wallRequest) {
+    public WallPostResponse createWallPost(final Long wallOwnerId, final WallRequest wallRequest) {
         final Long userId = ContextHolder.userId();
         final WallPost wallPost = new WallPost();
         wallPost.setText(wallRequest.getText());
-        wallPost.setFileUrl(wallRequest.getFileUrl());
         wallPost.setWallOwnerId(wallOwnerId);
         wallPost.setUserId(userId);
         wallRepository.save(wallPost);
+        final User user = userRepository.findById(wallPost.getUserId()).orElseThrow(UserNotExistsException::new);
+        return new WallPostResponse(ConvertUtil.convertToWallPostDto(wallPost, user));
     }
 
     public WallPostsResponse getWallPosts(final Long wallOwnerId, final Integer page, final Integer limit) {
@@ -44,7 +48,6 @@ public class WallsService {
         return new WallPostsResponse(posts.stream().map(e -> {
             final Long userId = e.getUserId();
             return ConvertUtil.convertToWallPostDto(e, userUdAndUserMap.getOrDefault(userId, new User()));
-        }).collect(Collectors.toList()),
-                wallRepository.countWallPostsByWallOwnerIdEquals(wallOwnerId));
+        }).collect(Collectors.toList()), wallRepository.countWallPostsByWallOwnerIdEquals(wallOwnerId));
     }
 }

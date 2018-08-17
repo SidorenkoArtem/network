@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class WallRequest {
-    private final String fileUrl;
+    //private final String fileUrl;
     private final String text;
 }

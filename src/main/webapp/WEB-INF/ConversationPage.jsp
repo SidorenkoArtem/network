@@ -30,6 +30,9 @@
                 });
             }
         });
+        if (count >= result.count) {
+            $("#loadConversations").hide();
+        }
         page++;
     }
 

@@ -12,7 +12,18 @@
 </div>
 <c:if test="${otherUserPageData.authenticated == false}">
     <div>
-        <jsp:include page="login.jsp"/>
+        <form method="post">
+            <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input name="username" type="text" class="form-control" id="username" placeholder="Username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input name="password" type="password" class="form-control" id="password" placeholder="Password">
+            </div>
+            <input type="submit" name="login" class="login loginmodal-submit" value="Login">
+        </form>
     </div>
 </c:if>
 <div class="container">
@@ -133,10 +144,15 @@
         <div class="col-sm-6">
             <c:if test="${otherUserPageData.user.showWall}">
                 <c:if test="${otherUserPageData.authenticated}">
-                    <input type="text" placeholder="Введите сообщение"/>
+                    <input id="postText" type="text" placeholder="Введите сообщение"/>
+                    <button onclick="sendMessage()">Отправить сообщение</button>
                 </c:if>
-                <div id="wall">
-                    <input id="loadPosts" type="button" onclick="addElements()"></div>
+                <div id="beforeWall" class="my-3 p-3 bg-white rounded shadow-sm">
+                </div>
+                <div id="wall" class="my-3 p-3 bg-white rounded shadow-sm">
+                </div>
+                <div class="my-3 p-3 bg-white rounded shadow-sm">
+                    <button onclick="addElements()">Load more ...</button>
                 </div>
                 <script>
                     var page = 0;
@@ -146,42 +162,75 @@
                         addElements();
                     });
 
+                    function sendMessage() {
+                        var text = {text:$("#postText").val()};
+                        $.ajax({
+                            url: "/wall/user/${otherUserPageData.user.id}",
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+                            method: "POST",
+                            data: JSON.stringify(text),
+                            success: function(result) {
+                                console.log(result);
+                                var post = result.wallPostDto;
+                                console.log(post);
+                                $(createDomElement(post)).insertAfter("#beforeWall");
+                            }
+                        });
+                    }
+
+                    function createDomElement(el) {
+                        console.log(el);
+                        return "<div class=\"container\">" +
+                            "<div class=\"row\">" +
+                            "<div class=\"col-sm-1\">" +
+                            "<img height=\"60\" width=\"60\" src=\"" + el.user.photoUrl + "\">" +
+                            "</div>" +
+                            "<div class=\"col-sm-6\">" +
+                            "<div class='row'>" +
+                            "<p>" + el.user.firstName + " " + el.user.name + "</p>" +
+                            "</div>" +
+                            "<div>" +
+                            "<p>" + el.text + "</p>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>" +
+                            "</div>";
+                    }
+
                     function addElements() {
                         $.ajax({
-                            url:"/wall/user/${otherUserPageData.user.id}",
+                            url:"/wall/user/${otherUserPageData.user.id}?page=" + page + "&limit=5",
                             method:"GET",
                             success: function (response) {
                                 var posts = response.posts;
-                                console.log(response);
-                                console.log(response.posts);
                                 posts.forEach(function(el) {
                                     var domElement =
                                         "<div class=\"container\">" +
-                                                "<div class=\"row\">" +
-                                                    "<div class=\"col-sm-1\">" +
-                                                        "<img height=\"60\" width=\"60\" src=\" + el.user.photoUrl + \">" +
-                                                    "</div>" +
-                                                    "<div class=\"col-sm-6\">" +
-                                                        "<div>" +
-                                                            "<p>" + el.user.firstName + " " + el.user.name + "</p>" +
-                                                        "</div>" +
-                                                        "<div>" +
-                                                    "</div>" +
-                                                "</div>" +
-                                                "<div class=\"row\">" +
-                                                    "<p>" + el.text + "</p>" +
-                                                "</div>" +
+                                        "<div class=\"row\">" +
+                                        "<div class=\"col-sm-1\">" +
+                                        "<img height=\"60\" width=\"60\" src=\"" + el.user.photoUrl + "\">" +
+                                        "</div>" +
+                                        "<div class=\"col-sm-6\">" +
+                                        "<div class='row'>" +
+                                        "<p>" + el.user.firstName + " " + el.user.name + "</p>" +
+                                        "</div>" +
+                                        "<div>" +
+                                        "<p>" + el.text + "</p>" +
+                                        "</div>" +
+                                        "</div>" +
+                                        "</div>" +
                                         "</div>";
                                     $("#wall").append(domElement);
                                     count++;
-                                    if (count === response.count) {
+                                    if (count >= response.count) {
                                         $("#loadPosts").hide();
                                     }
                                 });
                             }
                         });
+                        page++;
                     }
-                    page++;
                 </script>
             </c:if>
         </div>

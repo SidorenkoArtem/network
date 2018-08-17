@@ -23,7 +23,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/{userId}", "/user", "/images/**").permitAll()
+                .antMatchers("/{userId}", "/user", "/images/**", "/wall/user/{userId}").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login").loginProcessingUrl("/{userId}").permitAll()
@@ -43,6 +43,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .userDetailsService(accountDetailsService);
-        //.passwordEncoder(bcryptPasswordEncoder());
+                //.passwordEncoder(bcryptPasswordEncoder());
     }
 }

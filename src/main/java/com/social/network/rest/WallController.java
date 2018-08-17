@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 
 @RestController
@@ -29,9 +28,8 @@ public class WallController {
 
     @PostMapping("/user/{userId}")
     @ApiOperation(value = "Add note to wall")
-    public ResponseEntity<String> createWallPost(@RequestBody @Valid WallRequest wallRequest,
+    public ResponseEntity<Object> createWallPost(@RequestBody @Valid WallRequest wallRequest,
             @PathVariable(value = "userId") Long ownerWallId) {
-        wallsService.createWallPost(ownerWallId, wallRequest);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(wallsService.createWallPost(ownerWallId, wallRequest), HttpStatus.OK);
     }
 }
