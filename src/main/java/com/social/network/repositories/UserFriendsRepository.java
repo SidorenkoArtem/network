@@ -14,6 +14,8 @@ import java.util.Optional;
 @Repository
 public interface UserFriendsRepository extends CrudRepository<UserFriends, TimePK> {
 
+    @Query("select userFriend from UserFriends userFriend where (userFriend.userId = ?1 or userFriend.friendId = ?2) and" +
+            " userFriend.status = ?3")
     List<UserFriends> findUserFriendsByUserIdEqualsOrFriendIdEqualsAndStatusEquals(final Long userId, final Long userIdToo,
                 final Status status, Pageable pageable);
     int countByUserIdEqualsOrFriendIdEqualsAndStatusEquals(final Long userId,final Long userIdToo, Status status);

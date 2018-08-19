@@ -19,8 +19,10 @@
             url: "/user/conversations/${conversationId}/messages?page=" + page,
             method: "GET",
             success: function (result) {
+                console.log(result);
                 var messages = result.lastMessageDtos;
                 messages.forEach(function (el) {
+                    console.log(el);
                     var domElement = createDomElement(el);
                     $("#messagesContainer").append(domElement);
                     count++;
@@ -37,7 +39,7 @@
     }
 
     function createDomElement(el) {
-        return "<div class='row'>" +
+        var domElement= "<div class='row'>" +
             "<a href=\"/" + el.user.userId + "\">" +
                 "<div class='col-sm-1'>" +
                     "<img height=\"60\" width=\"60\" src=\"" + el.user.photoUrl + "\"/>" +
@@ -53,16 +55,20 @@
                     "<p>" +
                         "<font size=\"1\">" +
                             el.createTimestamp +
-                        "</font></p>" +
-                "</div>" +
+                        "</font></p>";
+        if (el.fileUrl != '') {
+            domElement = domElement + "<p><a href=\""+ el.fileUrl+"\" download>Скачать файл</a></p>";
+        }
+        domElement = domElement + "</div>" +
             "</div>";
+        return domElement;
     }
 
     function sendMessage() {
         var content = {
             "receiverUserId":"0",
             "text":$("#inputMessages").val(),
-            "fileUrl":""
+            "fileUrl":$("#tmpFile").val()
         };
         $.ajax({
             url: "/user/messages",
@@ -81,25 +87,33 @@
         var fd = new FormData(document.getElementById("fileinfo"));
         fd.append("label", "WEBUPLOAD");
         $.ajax({
-            url: "user/upload",
+            url: "/user/image",
             type: "POST",
             data: fd,
             processData: false,  // tell jQuery not to process the data
             contentType: false   // tell jQuery not to set contentType
         }).done(function( data ) {
-            console.log("PHP Output:");
-            console.log( data );
+            $("#tmpFile").val(data.path);
+            $("#deleteBtn").show();
+
         });
         return false;
+    }
+    function deleteFile() {
+        $("#tmpFile").val("");
+        $("#deleteBtn").hide();
+
     }
 </script>
 
 <div class="container">
     <form method="post" id="fileinfo" name="fileinfo" onsubmit="return submitForm();">
-        <label>Select a file:</label><br>
+        <label>Выберите файл:</label><br>
         <input type="file" name="file" required />
-        <input type="submit" value="Upload" />
+        <input type="submit" value="Загрузить" />
+        <input id="deleteBtn" type="button" hidden value="Открепить файл" onclick="deleteFile()">
     </form>
+    <input id="tmpFile" hidden/>
     <input id="inputMessages" type="text" placeholder="Введите сообщение"/>
 
     <button id="sendMessage" onclick="sendMessage()">Отправить</button>

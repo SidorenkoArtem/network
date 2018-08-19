@@ -19,10 +19,10 @@
 </div>
 </div>
 <div class="container">
-    <div class="w3-sidebar w3-bar-block w3-light-grey w3-card" style="width:130px">
+    <div class="w3-sidebar w3-bar-block w3-light-grey w3-card" style="width:150px">
         <button class="w3-bar-item w3-button tablink" onclick="openPage(event, 'friends')">Друзья</button>
         <button class="w3-bar-item w3-button tablink" onclick="openPage(event, 'friendshipRequest')">Заявки в друзья</button>
-        <button class="w3-bar-item w3-button tablink" onclick="openPage(event, 'blocked')">Tokyo</button>
+        <button class="w3-bar-item w3-button tablink" onclick="openPage(event, 'blocked')">Блокированные</button>
     </div>
 
     <div style="margin-left:130px">
@@ -42,6 +42,8 @@
     </div>
 </div>
 <script>
+
+
     function openPage(evt, cityName) {
         var i, x, tablinks;
         x = document.getElementsByClassName("city");
@@ -70,6 +72,13 @@
             blocked :0
         }
     };
+
+    $(document).ready(function () {
+        addElement("APPROVED");
+        addElement("REQUESTED");
+        addElement("BLOCKED");
+
+    });
     function addElement(name) {
         var page;
         var count;
@@ -95,10 +104,14 @@
             success: function(response) {
                 var userFriends = response.userFriends;
                 userFriends.forEach(function(el) {
-                    console.log(el);
                     var domElement =
-                        '<div class=\"container\">' +
-                        '<div class=\"row\">' +
+                        '<div id=\"' + el.friend.userId + '\" class=\"container\">' +'<div class=\"row\">';
+                    if (name =="REQUESTED") {
+                        domElement = domElement +
+                            "<button onclick=\"approve("+el.friend.userId+")\">approve</button>" +
+                            "<button onclick=\"decline("+el.friend.userId+")\">decline</button>";
+                    }
+                        domElement = domElement +
                         '<a href="/' + el.friend.userId + '">' +
                         '<div class=\"col-sm-2\">' +
                         '<img src="'+ el.friend.photoUrl + '"/>' +
@@ -109,10 +122,8 @@
                         '</a>' +
                         '</div>' +
                         '<div>' +
-                        '<input type=\"button\" onclick=\"deleteFriend(' + el.friend.userId + ')\">Убрать из друзей</input>' +
                         '</div>' +
                         '</div>';
-                    console.log(domElement);
                     switch (name) {
                         case "APPROVED" :
                             $("#friends").append(domElement);
@@ -152,6 +163,28 @@
                 menu.count.blocked = count;
                 break;
         }
+    }
+
+    function approve(id) {
+        $.ajax({
+            url:"/user/" + id + "/friends",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            method: "PUT",
+            data: JSON.stringify("APPROVED")
+        });
+        $("#" + id).hide();
+    }
+
+    function decline(id) {
+        $.ajax({
+            url:"/user/" + id + "/friends",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            method: "PUT",
+            data: JSON.stringify("BLOCKED")
+        });
+        $("#" + id).hide();
     }
 
     function deleteFriend(userId) {

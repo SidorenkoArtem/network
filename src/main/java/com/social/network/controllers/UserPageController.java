@@ -51,7 +51,7 @@ public class UserPageController implements BaseController {
         return "groupsPage";
     }
 
-    @RequestMapping(value = "/group/{groupId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/group/{groupId}")
     public String groupPage(final Model model, @PathVariable(name = "groupId") Long groupId) {
         model.addAttribute("groupData", socialGroupsService.getSocialGroup(groupId));
         return "GroupPage";
@@ -67,5 +67,31 @@ public class UserPageController implements BaseController {
         model.addAttribute("conversationId", conversationId);
         model.addAttribute("receiverId", messagesService.getReceiverUserIdByConversation(conversationId));
         return "ConversationPage";
+    }
+
+    @RequestMapping(value = "/registration", method = RequestMethod.GET)
+    public String registration(final Model model) {
+        return "registration";
+    }
+
+    @RequestMapping(value = "/user/pageConfiguration", method = RequestMethod.GET)
+    public String pageConfigure(final Model model) {
+        return "pageConfigure";
+    }
+
+    @RequestMapping(value = "/user/{userId}/allGifts")
+    public String pageGifts(final Model model, @PathVariable(name = "userId") Long userId) {
+        model.addAttribute("userId", userId);
+        return "userGifts";
+    }
+
+    @RequestMapping(value = "/groups/search")
+    public String groupsSearch(final Model model) {
+        return "groupSearch";
+    }
+
+    @RequestMapping(value = "/users/search")
+    public String usersSearch(final Model model) {
+        return "userSearch";
     }
 }

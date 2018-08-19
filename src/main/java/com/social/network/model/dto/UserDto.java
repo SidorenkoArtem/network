@@ -27,10 +27,14 @@ public class UserDto {
     private Boolean validated;
     private Boolean deleted;
 
+    private Boolean showPage;
     private Boolean showGroups;
     private Boolean showWall;
     private Boolean showLocation;
     private Boolean showGifts;
+    private Boolean showBirthday;
+    private Boolean showSex;
+    private Boolean showFriends;
 
     private LocalDateTime createTimestamp;
 }

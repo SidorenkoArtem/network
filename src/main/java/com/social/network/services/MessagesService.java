@@ -43,7 +43,6 @@ public class MessagesService implements BaseService {
 
         final Set<Long> userCreatorIds = userConversations.stream().map(UserConversation::getCreatorUserId).collect(Collectors.toSet());
         final Set<Long> userCompanionIds = userConversations.stream().map(UserConversation::getCompanionUserId).collect(Collectors.toSet());
-
         final Map<Long, User> creators = userRepository.findUsersByIdIn(userCreatorIds).stream().collect(Collectors.toMap(User::getId, Function.identity()));
         final Map<Long, User> companions = userRepository.findUsersByIdIn(userCompanionIds).stream().collect(Collectors.toMap(User::getId, Function.identity()));
 

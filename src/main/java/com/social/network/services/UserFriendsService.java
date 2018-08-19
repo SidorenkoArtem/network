@@ -30,11 +30,6 @@ public class UserFriendsService {
     private final UserFriendsRepository userFriendsRepository;
     private final UserRepository userRepository;
 
-    public UserFriendsResponse getCurrentUserFriends(final Integer offset, final Integer limit) {
-        final Long userId = 0L;//TODO
-        return getUserFriends(userId ,offset, limit);
-    }
-
     public UserFriendsResponse getOtherUserFriends(final Long userId ,final Integer offset, final Integer limit) {
         return getUserFriends(userId, offset, limit);
     }
@@ -72,7 +67,7 @@ public class UserFriendsService {
     @Transactional
     public void changeRequestOnFriendship(final Long userId, final Status status) {
         final Long friendId = ContextHolder.userId();
-        final UserFriends requestOnFriendship = userFriendsRepository.findUserFriendsByUserIdEqualsAndFriendIdEquals(userId, friendId)
+        final UserFriends requestOnFriendship = userFriendsRepository.findUserFriendsByUserIdEqualsAndFriendIdEquals(friendId, userId)
                 .orElseThrow(RequestOnFriendshipNotExists::new);
         requestOnFriendship.setStatus(status);
         userFriendsRepository.save(requestOnFriendship);

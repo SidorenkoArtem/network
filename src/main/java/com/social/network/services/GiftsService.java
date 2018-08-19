@@ -1,9 +1,11 @@
 package com.social.network.services;
 
+import com.social.network.exceptions.UserNotConsistInConversationException;
 import com.social.network.model.dao.Gift;
 import com.social.network.model.dao.User;
 import com.social.network.model.dao.UserGift;
 import com.social.network.model.dto.UserGiftDto;
+import com.social.network.model.enums.Status;
 import com.social.network.model.responces.GiftsResponse;
 import com.social.network.model.responces.UserGiftsResponse;
 import com.social.network.repositories.GiftRepository;
@@ -28,9 +30,20 @@ public class GiftsService {
     private final UserGiftRepository userGiftRepository;
     private final UserRepository userRepository;
 
-    public UserGiftsResponse getCurrentUserGift(final Integer offset, final Integer limit) {
-        final Long userId = 0L;//TODO
-        return getUserGift(userId, offset, limit);
+    public UserGiftsResponse getUserGifts(final Long userId, final Status status) {
+        final List<UserGift> userGifts = userGiftRepository.findUserGiftByUserIdEqualsAndStatusEqualsOrderByCreateTimestampDesc(userId, status);
+        final Set<Long> giftIds = userGifts.stream().map(UserGift::getGiftId).collect(Collectors.toSet());
+        final Map<Long, Gift> giftIdAndDataMap = giftRepository.findGiftByIdIn(giftIds)
+                .stream().collect(Collectors.toMap(Gift::getId, Function.identity()));
+
+        final Set<Long> userIds = userGifts.stream().map(UserGift::getGiftFromId).collect(Collectors.toSet());
+        final Map<Long, User> userIdAndDataMap = userRepository.findUsersByIdIn(userIds).stream().collect(Collectors.toMap(User::getId, Function.identity()));
+        return new UserGiftsResponse(userGifts.stream().map(e ->{
+            final Long userIdFrom = e.getGiftFromId();
+            final Long giftId = e.getGiftId();
+            return ConvertUtil.convertToUserGiftDto(e, giftIdAndDataMap.getOrDefault(giftId, new Gift()),
+                    userIdAndDataMap.getOrDefault(userIdFrom, new User()));
+        }).collect(Collectors.toList()), null);
     }
 
     public UserGiftsResponse getOtherUserGift(final Long userId, final Integer offset, final Integer limit) {
@@ -53,5 +66,11 @@ public class GiftsService {
             return ConvertUtil.convertToUserGiftDto(e, gift, user);
         }).collect(Collectors.toList());
         return new UserGiftsResponse(userGiftDtos, userGiftRepository.countByUserIdEquals(userId));
+    }
+
+    public void updateUserGIft(final Long userGiftId, final Status status) {
+        final UserGift userGift = userGiftRepository.findById(userGiftId).orElseThrow(UserNotConsistInConversationException::new);
+        userGift.setStatus(status);
+        userGiftRepository.save(userGift);
     }
 }

@@ -28,6 +28,15 @@ public class UserGroupsService {
     private final SocialGroupRepository socialGroupRepository;
 
     @Transactional(readOnly = true)
+    public SimpleSocialGroupsResponse getGroups(final String text) {
+        final List<SocialGroup> socialGroups = socialGroupRepository.findSocialGroupByNameContaining(text);
+        System.out.println(text);
+        System.out.println(socialGroups);
+        return new SimpleSocialGroupsResponse(socialGroups.stream()
+                .map(ConvertUtil::convertToSimpleSocialGroupDto).collect(Collectors.toList()), null);
+    }
+
+    @Transactional(readOnly = true)
     public SimpleSocialGroupsResponse getOtherUserGroups(final Long userId, final Integer page, final Integer limit) {
         return getUserGroups(userId, page, limit);
     }

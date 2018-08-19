@@ -20,4 +20,10 @@ public class PagePermission {
     private Boolean showGifts;
     @Column(name = "show_friends")
     private Boolean showFriends;
+    @Column(name = "show_page")
+    private Boolean showPage;
+    @Column(name = "show_sex")
+    private Boolean showSex;
+    @Column(name = "show_birthday")
+    private Boolean showBirthday;
 }

@@ -13,7 +13,6 @@ public class ConvertUtil {
         userDto.setSurname(user.getSurname());
         userDto.setBirthday(user.getBirthday());
         userDto.setSex(user.getSex());
-        userDto.setEmail(user.getEmail());
         userDto.setPhotoUrl(user.getPhotoUrl());
         userDto.setRole(user.getRole());
         userDto.setCountry(user.getCountry());
@@ -23,10 +22,14 @@ public class ConvertUtil {
         userDto.setValidated(user.getValidated());
         userDto.setDeleted(user.getDeleted());
 
+        userDto.setShowFriends(user.getPagePermission().getShowFriends());
+        userDto.setShowPage(user.getPagePermission().getShowPage());
         userDto.setShowGroups(user.getPagePermission().getShowGroups());
         userDto.setShowWall(user.getPagePermission().getShowWall());
         userDto.setShowLocation(user.getPagePermission().getShowLocation());
         userDto.setShowGifts(user.getPagePermission().getShowGifts());
+        userDto.setShowBirthday(user.getPagePermission().getShowBirthday());
+        userDto.setShowSex(user.getPagePermission().getShowSex());
 
         userDto.setCreateTimestamp(user.getCreateTimestamp());
         return userDto;
@@ -100,6 +103,7 @@ public class ConvertUtil {
         wallPostDto.setText(wallPost.getText());
         wallPostDto.setFileUrl(wallPost.getFileUrl());
         wallPostDto.setUser(convertToSimpleUserDto(user));
+        wallPostDto.setPostId(wallPost.getId());
         return wallPostDto;
     }
 

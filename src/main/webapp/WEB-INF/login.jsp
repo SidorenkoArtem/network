@@ -42,6 +42,7 @@
                         <input name="password" type="password" class="form-control" id="password" placeholder="Password">
                         </div>
                         <input type="submit" name="login" class="login loginmodal-submit" value="Login">
+                        <h4><a href="/registration">Регистрация</a></h4>
                     </form>
                 </div>
             </div>

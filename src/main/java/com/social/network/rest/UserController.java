@@ -1,31 +1,28 @@
 package com.social.network.rest;
 
-import com.social.network.configuration.ContextHolder;
-import com.social.network.exceptions.UserNotExistsException;
-import com.social.network.model.dao.User;
 import com.social.network.model.enums.Status;
 import com.social.network.model.requests.MessageRequest;
 import com.social.network.model.requests.UserRequest;
 import com.social.network.model.responces.*;
-import com.social.network.repositories.UserRepository;
+import com.social.network.repositories.FilesRepository;
 import com.social.network.services.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ResponseHeader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
+
+import com.social.network.model.dao.UploadFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,19 +30,18 @@ import java.util.List;
 @Api(tags = "User-Controller")
 public class UserController {
 
-    private static String UPLOADED_FOLDER = "C://Users//дима//IdeaProjects//network//src//main//webapp//images//";
-    private static String DELETE_FOLDER = "C:\\Users\\дима\\IdeaProjects\\network\\src\\main\\webapp";
-
     private final UsersService usersService;
     private final MessagesService messagesService;
     private final UserService userService;
     private final UserFriendsService userFriendsService;
     private final UserGroupsService userGroupsService;
-    private final UserRepository userRepository;
+    private final FilesRepository filesRepository;
+    private final GiftsService giftsService;
 
-    @PostMapping()
+    @PostMapping("/registration")
     @ApiOperation(value = "User registration")
-    public ResponseEntity<String> userRegistration(@RequestBody @Valid UserRequest userRequest) {
+    public ResponseEntity<String> userRegistration(@RequestBody UserRequest userRequest) {
+        System.out.println(userRequest);
         userService.userRegistration(userRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -55,6 +51,20 @@ public class UserController {
     public ResponseEntity<Object> userUpdate(@RequestBody @Valid UserRequest userRequest) {
         userService.updateUser(userRequest);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    @ApiOperation(value = "Get users")
+    public ResponseEntity<Object> getUsers(
+            @RequestParam(value ="name") String name, @RequestParam("firstName") String firstName,
+            @RequestParam(value = "city") String city) {
+        return new ResponseEntity<>(userService.getUsers(name, firstName, city), HttpStatus.OK);
+    }
+
+    @GetMapping("")
+    @ApiOperation(value = "Get user", response = UserResponse.class)
+    public ResponseEntity<Object> getCurrentUser() {
+        return new ResponseEntity<>(userService.getCurrentUser(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -73,7 +83,7 @@ public class UserController {
     @GetMapping("/conversations/{conversationId}/messages")
     @ApiOperation(value = "Get conversation messages", response = MessagesResponse.class)
     public ResponseEntity<Object> getMessages(@PathVariable(value = "conversationId") Long conversationId,
-            @RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "limit", defaultValue = "5") Integer limit) {
+                                              @RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "limit", defaultValue = "5") Integer limit) {
         return new ResponseEntity<>(messagesService.getConversationMessages(conversationId, page, limit), HttpStatus.OK);
     }
 
@@ -85,8 +95,8 @@ public class UserController {
 
     @GetMapping("/{userId}/friends")
     @ApiOperation(value = "Get user friends", response = UserFriendsResponse.class)
-    public ResponseEntity<Object> getUserFriend(@PathVariable(value = "userId") Long userId, @RequestParam(name = "status", defaultValue = "APPROVED")Status status,
-                                        @RequestParam(name = "page", defaultValue = "0") Integer page, @RequestParam(name = "limit", defaultValue = "5") Integer limit) {
+    public ResponseEntity<Object> getUserFriend(@PathVariable(value = "userId") Long userId, @RequestParam(name = "status", defaultValue = "APPROVED") Status status,
+                                                @RequestParam(name = "page", defaultValue = "0") Integer page, @RequestParam(name = "limit", defaultValue = "5") Integer limit) {
         return new ResponseEntity<>(userFriendsService.getFriends(userId, status, page, limit), HttpStatus.OK);
     }
 
@@ -114,7 +124,7 @@ public class UserController {
     @GetMapping("/{userId}/groups")
     @ApiOperation(value = "Get user groups", response = SimpleSocialGroupsResponse.class)
     public ResponseEntity<Object> getUserGroups(@PathVariable(name = "userId") Long userId,
-            @RequestParam(name = "page", defaultValue = "0") Integer page, @RequestParam(name = "limit", defaultValue = "5") Integer limit) {
+                                                @RequestParam(name = "page", defaultValue = "0") Integer page, @RequestParam(name = "limit", defaultValue = "5") Integer limit) {
         return new ResponseEntity<>(userGroupsService.getOtherUserGroups(userId, page, limit), HttpStatus.OK);
     }
 
@@ -132,35 +142,49 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PutMapping("/configuration")
+    @ApiOperation(value = "User configuration")
+    public ResponseEntity<String> configureUser(@RequestBody UserRequest userRequest) {
+        userService.updateUser(userRequest);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{userId}/gifts")
+    @ApiOperation(value = "Get user gifts")
+    public ResponseEntity<Object> getUserGifts(@PathVariable(value = "userId") Long userId,
+        @RequestParam(name="status", defaultValue = "APPROVED") Status status){
+        return new ResponseEntity<>(giftsService.getUserGifts(userId, status), HttpStatus.OK);
+    }
+
+    @PutMapping("/gift/{giftRequestId}")
+    @ApiOperation(value = "Proccess gift")
+    public ResponseEntity<String> proccessGift(@PathVariable(name = "giftRequestId") Long userGiftId,
+        @RequestBody Status status) {
+        giftsService.updateUserGIft(userGiftId, status);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     @PostMapping("/image")
     @ApiOperation(value = "Upload file")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+        final String filePath = new File("src\\main\\webapp\\images\\").getAbsolutePath().replace("\\", "//");
+        final String deletePath = new File("src" + '/' + "main" + '/' + "webapp").getAbsolutePath();
         if (file.isEmpty()) {
             return new ResponseEntity<>("Please, load file", HttpStatus.OK);
         }
+        final UploadFile newUploadFile = new UploadFile();
         try {
-            saveUploadFile(Arrays.asList(file), ContextHolder.userId());
+            byte[] bytes = file.getBytes();
+            filesRepository.save(newUploadFile);
+            Path path = Paths.get(filePath + "//" + newUploadFile.getId() + "//" + file.getOriginalFilename());
+            Files.createDirectories(path.getParent());
+            Files.write(path, bytes);
+            newUploadFile.setPath(path.toString().replace(deletePath, ""));
+            filesRepository.save(newUploadFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(file.getOriginalFilename());
-        return new ResponseEntity<>("ok",HttpStatus.OK);
-    }
-
-    public void saveUploadFile(final List<MultipartFile> files, final Long userId) throws IOException {
-        for (MultipartFile file : files) {
-            if (file.isEmpty()) {
-                continue;
-            }
-            byte[] bytes = file.getBytes();
-            Path path = Paths.get(UPLOADED_FOLDER + ContextHolder.userId() + "//" + file.getOriginalFilename());
-            Files.createDirectories(path.getParent());
-            Files.write(path, bytes);
-            User user = userRepository.findById(ContextHolder.userId()).orElseThrow(UserNotExistsException::new);
-            user.setPhotoUrl(path.toString().replace(DELETE_FOLDER, ""));
-            userRepository.save(user);
-        }
-
+        return new ResponseEntity<>(newUploadFile, HttpStatus.OK);
     }
 
 }

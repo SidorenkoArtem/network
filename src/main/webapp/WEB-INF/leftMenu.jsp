@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: дима
-  Date: 23.07.2018
-  Time: 13:56
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
@@ -12,6 +5,9 @@
 <ul>
     <li><a href="/">Моя страница</a></li>
     <li><a href="/conversations">Мои сообщения()</a></li>
+    <li><a href="/user/pageConfiguration">Настройки</a></li>
+    <li><a href="/users/search/">Поиск людей</a></li>
+    <li><a href="/groups/search">Поиск групп</a></li>
 </ul>
 </body>
 </html>

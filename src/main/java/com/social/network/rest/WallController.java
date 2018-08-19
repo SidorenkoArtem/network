@@ -1,6 +1,7 @@
 package com.social.network.rest;
 
 import com.social.network.model.requests.WallRequest;
+import com.social.network.model.responces.WallPostResponse;
 import com.social.network.model.responces.WallPostsResponse;
 import com.social.network.services.WallsService;
 import io.swagger.annotations.Api;
@@ -27,9 +28,16 @@ public class WallController {
     }
 
     @PostMapping("/user/{userId}")
-    @ApiOperation(value = "Add note to wall")
+    @ApiOperation(value = "Add record to wall", response = WallPostResponse.class)
     public ResponseEntity<Object> createWallPost(@RequestBody @Valid WallRequest wallRequest,
             @PathVariable(value = "userId") Long ownerWallId) {
         return new ResponseEntity<>(wallsService.createWallPost(ownerWallId, wallRequest), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/user/post/{postId}")
+    @ApiOperation(value = "Delete record from wall")
+    public ResponseEntity<String> deleteRecord(@PathVariable(value = "postId") Long postId) {
+        wallsService.deleteWallPost(postId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

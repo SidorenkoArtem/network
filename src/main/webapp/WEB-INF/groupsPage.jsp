@@ -6,11 +6,25 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
+<div class="container">
+    <div>
+        <jsp:include page="mainMenu.jsp"/>
+    </div>
+    <div class="col-sm-3">
+        <div>
+            <jsp:include page="leftMenu.jsp"/>
+        </div>
+    </div>
+</div>
+<h1>Группы: </h1>
 <button id="loadGroups" onclick="addElement()">More groups</button>
 <script>
     var page = 0;
     var count = 0;
+    $(document).ready(function () {
+        addElement();
 
+    });
     function addElement() {
         $.ajax({
             url:"/user/${userId}/groups",
@@ -21,7 +35,7 @@
                     console.log(el);
                     var domRowElement =
                         "<div class='row'>" +
-                            "<a href=\"/user/group/" + el.id + "\">" +
+                            "<a href=\"/group/" + el.id + "\">" +
                                 "<div class='col-sm-1'>" +
                                     "<img height=\"60\" width=\"60\" src=\"" + el.imageUrl + "\"/>" +
                                 "</div>" +

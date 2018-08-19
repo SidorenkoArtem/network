@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface SocialGroupRepository extends CrudRepository<SocialGroup, Long> {
     List<SocialGroup> findSocialGroupsByIdIn(final Collection<Long> userIds);
+    List<SocialGroup> findSocialGroupByNameContaining(final String search);
 }

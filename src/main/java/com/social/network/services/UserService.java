@@ -20,6 +20,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.social.network.ApplicationConstants.*;
 
 @Service
@@ -31,6 +35,13 @@ public class UserService {
     private final SocialGroupsService socialGroupsService;
     private final UserFriendsService userFriendsService;
     private final UserFriendsRepository userFriendsRepository;
+
+    @Transactional(readOnly = true)
+    public SimpleUsersResponse getUsers(final String name, final String firstName, final String city) {
+        final List<User> users = userRepository.findUsersByNameContainingAndFirstNameContainingAndCityContaining(name, firstName, city);
+        return new SimpleUsersResponse(users.stream()
+                .map(ConvertUtil::convertToSimpleUserDto).collect(Collectors.toList()));
+    }
 
     @Transactional(readOnly = true)
     public PageResponses getCurrentUserPage() {
@@ -51,8 +62,12 @@ public class UserService {
         final UserFriendsResponse userFriend = userFriendsService.getOtherUserFriends(userId, DEFAULT_OFFSET, DEFAULT_USER_FRIENDS_LIMIT);
         pageResponses.setFriends(userFriend.getUserFriends());
         pageResponses.setCountFriends(userFriend.getCount());
+
+        pageResponses.setShowBirthday(true);
+        pageResponses.setShowSex(true);
         pageResponses.setCurrentUser(true);
         pageResponses.setAuthenticated(true);
+        pageResponses.setShowPage(true);
         return pageResponses;
     }
 
@@ -69,10 +84,6 @@ public class UserService {
         user.setSurname(userRequest.getSurname());
         user.setBirthday(userRequest.getBirthday());
         user.setSex(userRequest.getSex());
-        if (userRepository.existsByEmailEquals(userRequest.getEmail())) {
-            throw new EmailAlreadyExistException();
-        }
-        user.setEmail(userRequest.getEmail());
         user.setPhotoUrl(userRequest.getPhotoUrl());
         user.setRole(userRequest.getRole());
         user.setCountry(userRequest.getCountry());
@@ -86,6 +97,9 @@ public class UserService {
         pagePermission.setShowLocation(userRequest.getShowLocation());
         pagePermission.setShowGifts(userRequest.getShowGifts());
         pagePermission.setShowFriends(userRequest.getShowFriends());
+        pagePermission.setShowPage(userRequest.getShowPage());
+        pagePermission.setShowSex(userRequest.getShowSex());
+        pagePermission.setShowBirthday(userRequest.getShowBirthday());
         user.setPagePermission(pagePermission);
         userRepository.save(user);
     }
@@ -101,12 +115,7 @@ public class UserService {
         currentUser.setFirstName(userRequest.getFirstName());
         currentUser.setName(userRequest.getName());
         currentUser.setSurname(userRequest.getSurname());
-        currentUser.setBirthday(userRequest.getBirthday());
-        currentUser.setSex(userRequest.getSex());
         currentUser.setPhotoUrl(userRequest.getPhotoUrl());
-        currentUser.setRole(userRequest.getRole());
-        currentUser.setCountry(userRequest.getCountry());
-        currentUser.setCity(userRequest.getCity());
         userRepository.save(currentUser);
         final PagePermission pagePermission = currentUser.getPagePermission();
         pagePermission.setShowGroups(userRequest.getShowGroups());
@@ -114,6 +123,9 @@ public class UserService {
         pagePermission.setShowLocation(userRequest.getShowLocation());
         pagePermission.setShowGifts(userRequest.getShowGifts());
         pagePermission.setShowFriends(userRequest.getShowFriends());
+        pagePermission.setShowPage(userRequest.getShowPage());
+        pagePermission.setShowSex(userRequest.getShowSex());
+        pagePermission.setShowBirthday(userRequest.getShowBirthday());
         currentUser.setPagePermission(pagePermission);
         userRepository.save(currentUser);
         return currentUser;
@@ -126,12 +138,19 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public UserDto getCurrentUser() {
+        final User user = userRepository.findById(ContextHolder.userId())
+                .orElseThrow(UserNotExistsException::new);
+        return ConvertUtil.convertToUserDto(user);
+    }
+
+    @Transactional(readOnly = true)
     public PageResponses getUserPage(final Long userId) {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final PageResponses pageResponses = new PageResponses();
         final User user = userRepository.findById(userId).orElseThrow(UserNotExistsException::new);
         final PagePermission pagePermission = user.getPagePermission();
-        final Boolean anonymous = authentication.getPrincipal().toString().equalsIgnoreCase("anonymousUser");
+        final boolean anonymous = authentication.getPrincipal().toString().equalsIgnoreCase("anonymousUser");
         pageResponses.setUser(ConvertUtil.convertToUserDto(user));
         pageResponses.setAuthenticated(!anonymous);
 
@@ -166,8 +185,11 @@ public class UserService {
             pageResponses.setFriends(userFriend.getUserFriends());
             pageResponses.setCountFriends(userFriend.getCount());
         }
+        pageResponses.setShowPage(pagePermission.getShowPage());
+        pageResponses.setShowLocation(pagePermission.getShowLocation());
+        pageResponses.setShowBirthday(pagePermission.getShowBirthday());
+        pageResponses.setShowSex(pagePermission.getShowSex());
         pageResponses.setCurrentUser(false);
-        System.out.println(pageResponses);
         return pageResponses;
     }
 

@@ -1,10 +1,10 @@
 package com.social.network.model.responces;
 
-import com.social.network.model.dto.UserDto;
+import com.social.network.model.dto.SimpleUserDto;
 import lombok.Data;
 import java.util.List;
 
 @Data
 public class SimpleUsersResponse {
-    private List<UserDto> users;
+    private final List<SimpleUserDto> users;
 }

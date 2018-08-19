@@ -7,8 +7,17 @@
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-<jsp:include page=".jsp"/>
-<div>
+<div class="container">
+    <div>
+        <jsp:include page="mainMenu.jsp"/>
+    </div>
+    <div class="col-sm-3">
+        <div>
+            <jsp:include page="leftMenu.jsp"/>
+        </div>
+    </div>
+</div>
+<div class="container">
     <h1>${groupData.socialGroup.name}</h1>
     <p>${groupData.socialGroup.description}</p>
     <c:if test="${groupData.subscriber == true}">

@@ -20,4 +20,8 @@ public class PageResponses {
     private Boolean authenticated;
     private Boolean hasRequestOnFriendship;
     private Boolean friend;
+    private Boolean showPage;
+    private Boolean showLocation;
+    private Boolean showBirthday;
+    private Boolean showSex;
 }

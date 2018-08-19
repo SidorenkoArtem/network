@@ -1,7 +1,9 @@
 package com.social.network.services;
 
 import com.social.network.configuration.ContextHolder;
+import com.social.network.exceptions.PostNotExistsException;
 import com.social.network.exceptions.UserNotExistsException;
+import com.social.network.exceptions.UserNotOwnerException;
 import com.social.network.model.dao.User;
 import com.social.network.model.dao.WallPost;
 import com.social.network.model.dto.WallPostDto;
@@ -49,5 +51,15 @@ public class WallsService {
             final Long userId = e.getUserId();
             return ConvertUtil.convertToWallPostDto(e, userUdAndUserMap.getOrDefault(userId, new User()));
         }).collect(Collectors.toList()), wallRepository.countWallPostsByWallOwnerIdEquals(wallOwnerId));
+    }
+
+    public void deleteWallPost(final Long postId) {
+        final Long userId = ContextHolder.userId();
+        final WallPost wallPost = wallRepository.findById(postId)
+                .orElseThrow(PostNotExistsException::new);
+        if (!wallPost.getWallOwnerId().equals(userId)) {
+            throw new UserNotOwnerException();
+        }
+        wallRepository.delete(wallPost);
     }
 }
