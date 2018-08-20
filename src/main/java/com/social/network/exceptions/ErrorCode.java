@@ -22,7 +22,9 @@ public enum  ErrorCode {
     RELATIONSHIP_NOT_EXIST(14, "Relationship does not exist"),
     REQUEST_TO_SOCIAL_GROUP_ALREADY_EXISTS(15, "Request to social group already exists"),
     CONVERSATION_NOT_EXISTS(16, "Conversation does not exist"),
-    USER_NOT_CONSISTS_IN_CONVERSATION(17, "User does not consist in conversation");
+    USER_NOT_CONSISTS_IN_CONVERSATION(17, "User does not consist in conversation"),
+    REQUEST_ON_GIFT_NOT_EXIST(18, "Request on gift does not exist"),
+    MISTAKEN_REQUEST_ON_GIFT(19, "Mistaken request on gift");
 
     private final int errorCode;
     private final String message;

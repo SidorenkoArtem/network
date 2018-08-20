@@ -1,12 +1,13 @@
 package com.social.network.services;
 
-import com.social.network.exceptions.UserNotConsistInConversationException;
+import com.social.network.configuration.ContextHolder;
+import com.social.network.exceptions.MistakenRequestOnGiftException;
+import com.social.network.exceptions.RequestOnGiftNotExistsException;
 import com.social.network.model.dao.Gift;
 import com.social.network.model.dao.User;
 import com.social.network.model.dao.UserGift;
 import com.social.network.model.dto.UserGiftDto;
 import com.social.network.model.enums.Status;
-import com.social.network.model.responces.GiftsResponse;
 import com.social.network.model.responces.UserGiftsResponse;
 import com.social.network.repositories.GiftRepository;
 import com.social.network.repositories.UserGiftRepository;
@@ -15,7 +16,6 @@ import com.social.network.utils.ConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +35,6 @@ public class GiftsService {
         final Set<Long> giftIds = userGifts.stream().map(UserGift::getGiftId).collect(Collectors.toSet());
         final Map<Long, Gift> giftIdAndDataMap = giftRepository.findGiftByIdIn(giftIds)
                 .stream().collect(Collectors.toMap(Gift::getId, Function.identity()));
-
         final Set<Long> userIds = userGifts.stream().map(UserGift::getGiftFromId).collect(Collectors.toSet());
         final Map<Long, User> userIdAndDataMap = userRepository.findUsersByIdIn(userIds).stream().collect(Collectors.toMap(User::getId, Function.identity()));
         return new UserGiftsResponse(userGifts.stream().map(e ->{
@@ -52,12 +51,18 @@ public class GiftsService {
 
     private UserGiftsResponse getUserGift(final Long userId, final Integer offset, final Integer limit) {
         final List<UserGift> userGifts = userGiftRepository.findUserGiftByUserIdEquals(userId, PageRequest.of(offset, limit));
-        final Set<Long> giftIds = userGifts.stream().map(UserGift::getGiftId).collect(Collectors.toSet());
+        final Set<Long> giftIds = userGifts.stream().map(UserGift::getGiftId)
+                .collect(Collectors.toSet());
         final List<Gift> gifts = giftRepository.findGiftByIdIn(giftIds);
-        final Map<Long, Gift> giftIdAndGiftMap = gifts.stream().collect(Collectors.toMap(Gift::getId, Function.identity()));
-        final Set<Long> userIdsGiftFrom = userGifts.stream().map(UserGift::getGiftFromId).collect(Collectors.toSet());
+        final Map<Long, Gift> giftIdAndGiftMap = gifts.stream()
+                .collect(Collectors.toMap(Gift::getId, Function.identity()));
+
+        final Set<Long> userIdsGiftFrom = userGifts.stream().map(UserGift::getGiftFromId)
+                .collect(Collectors.toSet());
         final List<User> usersGiftFrom = userRepository.findUsersByIdIn(userIdsGiftFrom);
-        final Map<Long, User> userIdAndUserMap = usersGiftFrom.stream().collect(Collectors.toMap(User::getId, Function.identity()));
+        final Map<Long, User> userIdAndUserMap = usersGiftFrom.stream()
+                .collect(Collectors.toMap(User::getId, Function.identity()));
+
         final List<UserGiftDto> userGiftDtos = userGifts.stream().map(e -> {
             final Long giftId = e.getGiftId();
             final Long userIdGiftFrom = e.getGiftFromId();
@@ -68,8 +73,22 @@ public class GiftsService {
         return new UserGiftsResponse(userGiftDtos, userGiftRepository.countByUserIdEquals(userId));
     }
 
+    public void createRequestOnGift(final Long userId, final Long giftId) {
+        final UserGift userGift = new UserGift();
+        userGift.setUserId(userId);
+        userGift.setGiftFromId(ContextHolder.userId());
+        userGift.setGiftId(giftId);
+        userGift.setStatus(Status.REQUESTED);
+        userGiftRepository.save(userGift);
+    }
+
     public void updateUserGIft(final Long userGiftId, final Status status) {
-        final UserGift userGift = userGiftRepository.findById(userGiftId).orElseThrow(UserNotConsistInConversationException::new);
+        final UserGift userGift = userGiftRepository.findById(userGiftId)
+                .orElseThrow(RequestOnGiftNotExistsException::new);
+        final Long userId = ContextHolder.userId();
+        if (!userGift.getUserId().equals(userId)) {
+            throw new MistakenRequestOnGiftException();
+        }
         userGift.setStatus(status);
         userGiftRepository.save(userGift);
     }

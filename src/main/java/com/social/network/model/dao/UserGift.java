@@ -19,7 +19,7 @@ public class UserGift {
     @Column(name = "gift_user_from_id")
     private Long giftFromId;
     @Column(name = "create_timestamp")
-    private LocalDateTime createTimestamp;
+    private LocalDateTime createTimestamp = LocalDateTime.now();
     @Column(columnDefinition = "enum('APPROVED', 'BLOCKED', 'REQUESTED')")
     @Enumerated(EnumType.STRING)
     private Status status;

@@ -41,7 +41,6 @@ public class UserController {
     @PostMapping("/registration")
     @ApiOperation(value = "User registration")
     public ResponseEntity<String> userRegistration(@RequestBody UserRequest userRequest) {
-        System.out.println(userRequest);
         userService.userRegistration(userRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -54,7 +53,7 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    @ApiOperation(value = "Get users")
+    @ApiOperation(value = "Get users", response = SimpleUsersResponse.class)
     public ResponseEntity<Object> getUsers(
             @RequestParam(value ="name") String name, @RequestParam("firstName") String firstName,
             @RequestParam(value = "city") String city) {
@@ -156,9 +155,16 @@ public class UserController {
         return new ResponseEntity<>(giftsService.getUserGifts(userId, status), HttpStatus.OK);
     }
 
-    @PutMapping("/gift/{giftRequestId}")
-    @ApiOperation(value = "Proccess gift")
-    public ResponseEntity<String> proccessGift(@PathVariable(name = "giftRequestId") Long userGiftId,
+    @PostMapping("/{userId}/gifts/{giftId}")
+    @ApiOperation(value = "Create request on gift")
+    public ResponseEntity<String> createRequestOnGift(@PathVariable(value = "userId") Long userId, @PathVariable(value = "giftId") Long giftId) {
+        giftsService.createRequestOnGift(userId, giftId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/gift/{userGiftId}")
+    @ApiOperation(value = "Process gift")
+    public ResponseEntity<String> processGift(@PathVariable(name = "userGiftId") Long userGiftId,
         @RequestBody Status status) {
         giftsService.updateUserGIft(userGiftId, status);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

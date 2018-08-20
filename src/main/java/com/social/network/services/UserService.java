@@ -1,7 +1,6 @@
 package com.social.network.services;
 
 import com.social.network.configuration.ContextHolder;
-import com.social.network.exceptions.EmailAlreadyExistException;
 import com.social.network.exceptions.LoginAlreadyExitstsException;
 import com.social.network.exceptions.UserNotExistsException;
 import com.social.network.model.dao.PagePermission;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.social.network.ApplicationConstants.*;
@@ -38,9 +38,23 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public SimpleUsersResponse getUsers(final String name, final String firstName, final String city) {
+        final Long currentUserId = ContextHolder.userId();
         final List<User> users = userRepository.findUsersByNameContainingAndFirstNameContainingAndCityContaining(name, firstName, city);
-        return new SimpleUsersResponse(users.stream()
-                .map(ConvertUtil::convertToSimpleUserDto).collect(Collectors.toList()));
+        final Map<Long, Boolean> userIdAndIsFriendMap = users.stream()
+                .collect(Collectors.toMap(User::getId, e -> {
+                    final Long userId = e.getId();
+                    final UserFriends relationship = userFriendsRepository.getRelationship(userId, currentUserId)
+                            .orElse(new UserFriends());
+                    if (relationship != null && relationship.getStatus().equals(Status.APPROVED)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }));
+        return new SimpleUsersResponse(users.stream().map(e -> {
+                    final Long userId = e.getId();
+                    return ConvertUtil.convertToSimpleUserDto(e, userIdAndIsFriendMap.getOrDefault(userId, false));
+                }).collect(Collectors.toList()));
     }
 
     @Transactional(readOnly = true)
@@ -104,13 +118,12 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public UserResponse updateUser(final UserRequest userRequest) {
+    public void updateUser(final UserRequest userRequest) {
         final Long userId = ContextHolder.userId();
-        final User currentUser = userUpdate(userRequest, userId);
-        return new UserResponse(ConvertUtil.convertToUserDto(currentUser));
+        userUpdate(userRequest, userId);
     }
 
-    public User userUpdate(final UserRequest userRequest, final Long userId) {
+    private void userUpdate(final UserRequest userRequest, final Long userId) {
         final User currentUser = userRepository.findById(userId).orElseThrow(UserNotExistsException::new);
         currentUser.setFirstName(userRequest.getFirstName());
         currentUser.setName(userRequest.getName());
@@ -128,7 +141,6 @@ public class UserService {
         pagePermission.setShowBirthday(userRequest.getShowBirthday());
         currentUser.setPagePermission(pagePermission);
         userRepository.save(currentUser);
-        return currentUser;
     }
 
     @Transactional(readOnly = true)

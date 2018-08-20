@@ -4,6 +4,10 @@ import com.social.network.model.dao.*;
 import com.social.network.model.dto.*;
 
 public class ConvertUtil {
+
+    private ConvertUtil() {
+    }
+
     public static UserDto convertToUserDto(final User user) {
         final UserDto userDto = new UserDto();
         userDto.setId(user.getId());
@@ -36,7 +40,38 @@ public class ConvertUtil {
     }
 
     public static SimpleUserDto convertToSimpleUserDto(final User user) {
-        return new SimpleUserDto(user.getId(), user.getFirstName(), user.getName(), user.getPhotoUrl());
+        final SimpleUserDto simpleUser = new SimpleUserDto();
+        simpleUser.setName(user.getName());
+        simpleUser.setFirstName(user.getFirstName());
+        simpleUser.setUserId(user.getId());
+        simpleUser.setBirthday(user.getBirthday());
+        simpleUser.setCountry(user.getCountry());
+        simpleUser.setCity(user.getCity());
+        simpleUser.setUserPermission(convertToPagePermissionDto(user.getPagePermission()));
+        return simpleUser;
+    }
+
+    public static SimpleUserDto convertToSimpleUserDto(final User user, final Boolean friend) {
+        final SimpleUserDto simpleUser = new SimpleUserDto();
+        simpleUser.setName(user.getName());
+        simpleUser.setFirstName(user.getFirstName());
+        simpleUser.setUserId(user.getId());
+        simpleUser.setBirthday(user.getBirthday());
+        simpleUser.setCountry(user.getCountry());
+        simpleUser.setCity(user.getCity());
+        simpleUser.setFriend(friend);
+        simpleUser.setUserPermission(convertToPagePermissionDto(user.getPagePermission()));
+        return simpleUser;
+    }
+
+    private static PagePermissionDto convertToPagePermissionDto(final PagePermission pagePermission) {
+        final PagePermissionDto permission = new PagePermissionDto();
+        permission.setShowFriends(pagePermission.getShowFriends());
+        permission.setShowGifts(pagePermission.getShowGifts());
+        permission.setShowGroups(pagePermission.getShowGroups());
+        permission.setShowLocation(pagePermission.getShowLocation());
+        permission.setShowWall(pagePermission.getShowWall());
+        return permission;
     }
 
     public static UserFriendDto convertToUserFriendDto(final Long userId, final User user) {
@@ -70,7 +105,7 @@ public class ConvertUtil {
         return socialGroupDto;
     }
 
-    public static GiftDto convertToGiftDto(final Gift gift) {
+    private static GiftDto convertToGiftDto(final Gift gift) {
         final GiftDto giftDto = new GiftDto();
         giftDto.setId(gift.getId());
         giftDto.setImageUrl(gift.getImageUrl());
@@ -114,10 +149,4 @@ public class ConvertUtil {
         conversation.setCompanionConversation(convertToSimpleUserDto(companion));
         return conversation;
     }
-
-//    public static SimpleMessageDto convertToSimpleMessageDto(final Messages messages) {
-//        final SimpleMessageDto simpleMessageDto = new SimpleMessageDto();
-//        //simpleMessageDto.setText(messages.getText());
-//        return simpleMessageDto;
-//    }
 }
