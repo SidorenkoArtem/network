@@ -30,8 +30,6 @@ public class UserGroupsService {
     @Transactional(readOnly = true)
     public SimpleSocialGroupsResponse getGroups(final String text) {
         final List<SocialGroup> socialGroups = socialGroupRepository.findSocialGroupByNameContaining(text);
-        System.out.println(text);
-        System.out.println(socialGroups);
         return new SimpleSocialGroupsResponse(socialGroups.stream()
                 .map(ConvertUtil::convertToSimpleSocialGroupDto).collect(Collectors.toList()), null);
     }
@@ -73,7 +71,8 @@ public class UserGroupsService {
     }
 
     private void checkSocialGroup(final Long groupId) {
-        socialGroupRepository.findById(groupId).orElseThrow(SocialGroupNotExistException::new);
+        socialGroupRepository.findById(groupId)
+                .orElseThrow(SocialGroupNotExistException::new);
     }
 
 }

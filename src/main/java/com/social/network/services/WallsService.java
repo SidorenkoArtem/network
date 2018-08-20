@@ -6,7 +6,6 @@ import com.social.network.exceptions.UserNotExistsException;
 import com.social.network.exceptions.UserNotOwnerException;
 import com.social.network.model.dao.User;
 import com.social.network.model.dao.WallPost;
-import com.social.network.model.dto.WallPostDto;
 import com.social.network.model.requests.WallRequest;
 import com.social.network.model.responces.WallPostResponse;
 import com.social.network.model.responces.WallPostsResponse;

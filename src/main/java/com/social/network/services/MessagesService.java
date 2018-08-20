@@ -1,7 +1,6 @@
 package com.social.network.services;
 
 import com.social.network.configuration.ContextHolder;
-import com.social.network.controllers.BaseMvcController;
 import com.social.network.exceptions.ConversationNotExistsException;
 import com.social.network.exceptions.UserNotExistsException;
 import com.social.network.model.dao.Messages;

@@ -13,7 +13,7 @@ public interface BaseService {
         final UserConversation userConversation = userConversationRepository().findById(conversationId).
                 orElseThrow(ConversationNotExistException::new);
         final Long userId = ContextHolder.userId();
-        if (userConversation.getCreatorUserId() != userId && userConversation.getCompanionUserId() != userId) {
+        if (userConversation.getCreatorUserId().equals(userId) && userConversation.getCompanionUserId() != userId) {
             throw new UserNotConsistInConversationException();
         }
     }

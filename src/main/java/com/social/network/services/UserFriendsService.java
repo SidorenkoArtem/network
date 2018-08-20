@@ -7,7 +7,6 @@ import com.social.network.model.dao.User;
 import com.social.network.model.dao.UserFriends;
 import com.social.network.model.dto.UserFriendDto;
 import com.social.network.model.enums.Status;
-import com.social.network.model.requests.UserFriendsRequest;
 import com.social.network.model.responces.UserFriendsResponse;
 import com.social.network.repositories.UserFriendsRepository;
 import com.social.network.repositories.UserRepository;
@@ -17,8 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.management.relation.RelationException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
