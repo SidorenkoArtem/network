@@ -21,5 +21,5 @@ public class Messages {
     @Column(name = "file_url")
     private String fileUrl;
     @Column(name = "create_timestamp")
-    private LocalDateTime createTimestamp;
+    private LocalDateTime createTimestamp = LocalDateTime.now();
 }

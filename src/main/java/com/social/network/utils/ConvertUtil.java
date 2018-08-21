@@ -60,6 +60,8 @@ public class ConvertUtil {
         simpleUser.setCountry(user.getCountry());
         simpleUser.setCity(user.getCity());
         simpleUser.setFriend(friend);
+        simpleUser.setPhotoUrl(user.getPhotoUrl());
+        simpleUser.setGender(user.getSex());
         simpleUser.setUserPermission(convertToPagePermissionDto(user.getPagePermission()));
         return simpleUser;
     }
@@ -71,6 +73,8 @@ public class ConvertUtil {
         permission.setShowGroups(pagePermission.getShowGroups());
         permission.setShowLocation(pagePermission.getShowLocation());
         permission.setShowWall(pagePermission.getShowWall());
+        permission.setShowBirthday(pagePermission.getShowBirthday());
+        permission.setShowGender(pagePermission.getShowSex());
         return permission;
     }
 

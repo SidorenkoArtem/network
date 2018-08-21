@@ -4,7 +4,6 @@ import com.social.network.model.enums.Status;
 import com.social.network.model.requests.MessageRequest;
 import com.social.network.model.requests.UserRequest;
 import com.social.network.model.responces.*;
-import com.social.network.repositories.FilesRepository;
 import com.social.network.services.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,15 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import javax.validation.Valid;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import com.social.network.model.dao.UploadFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,7 +26,7 @@ public class UserController {
     private final UserService userService;
     private final UserFriendsService userFriendsService;
     private final UserGroupsService userGroupsService;
-    private final FilesRepository filesRepository;
+    private final FilesService filesService;
     private final GiftsService giftsService;
 
     @PostMapping("/registration")
@@ -173,24 +164,6 @@ public class UserController {
     @PostMapping("/image")
     @ApiOperation(value = "Upload file")
     public ResponseEntity<Object> uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-        final String filePath = new File("src\\main\\webapp\\images\\").getAbsolutePath().replace("\\", "//");
-        final String deletePath = new File("src" + '/' + "main" + '/' + "webapp").getAbsolutePath();
-        if (file.isEmpty()) {
-            return new ResponseEntity<>("Please, load file", HttpStatus.OK);
-        }
-        final UploadFile newUploadFile = new UploadFile();
-        try {
-            byte[] bytes = file.getBytes();
-            filesRepository.save(newUploadFile);
-            Path path = Paths.get(filePath + "//" + newUploadFile.getId() + "//" + file.getOriginalFilename());
-            Files.createDirectories(path.getParent());
-            Files.write(path, bytes);
-            newUploadFile.setPath(path.toString().replace(deletePath, ""));
-            filesRepository.save(newUploadFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity<>(newUploadFile, HttpStatus.OK);
+        return new ResponseEntity<>(filesService.uploadFile(file), HttpStatus.OK);
     }
-
 }

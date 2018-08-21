@@ -20,5 +20,5 @@ public class UserFriends {
     @Enumerated(EnumType.STRING)
     private Status status;
     @Column(name = "create_timestamp")
-    private LocalDateTime createTimestamp;
+    private LocalDateTime createTimestamp = LocalDateTime.now();
 }

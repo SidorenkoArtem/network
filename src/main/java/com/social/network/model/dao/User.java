@@ -48,5 +48,5 @@ public class User {
     @Column(name = "deleted")
     private Boolean deleted;
     @Column(name = "create_timestamp")
-    private LocalDateTime createTimestamp;
+    private LocalDateTime createTimestamp = LocalDateTime.now();
 }

@@ -11,19 +11,19 @@ public class PagePermission {
     @Column(name = "user_id")
     private Long userId;
     @Column(name = "show_groups")
-    private Boolean showGroups;
+    private Boolean showGroups = false;
     @Column(name = "show_wall")
-    private Boolean showWall;
+    private Boolean showWall = false;
     @Column(name = "show_location")
-    private Boolean showLocation;
+    private Boolean showLocation = false;
     @Column(name = "show_gift")
-    private Boolean showGifts;
+    private Boolean showGifts = false;
     @Column(name = "show_friends")
-    private Boolean showFriends;
+    private Boolean showFriends = false;
     @Column(name = "show_page")
-    private Boolean showPage;
+    private Boolean showPage = false;
     @Column(name = "show_sex")
-    private Boolean showSex;
+    private Boolean showSex = false;
     @Column(name = "show_birthday")
-    private Boolean showBirthday;
+    private Boolean showBirthday = false;
 }

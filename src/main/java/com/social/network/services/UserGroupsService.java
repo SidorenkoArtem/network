@@ -49,10 +49,10 @@ public class UserGroupsService {
 
     @Transactional
     public void createRequestToGroup(final Long groupId) {
-        checkSocialGroup(groupId);
+        final SocialGroup group = getSocialGroup(groupId);
         final Long userId = ContextHolder.userId();
         final UserGroup userGroupRequest = new UserGroup();
-        if (userGroupRepository.findUserGroupByUserIdEqualsAndGroupIdEquals(userId, groupId).orElse(null) != null) {
+        if (userGroupRepository.findUserGroupByUserIdEqualsAndGroupIdEquals(userId, group.getId()).orElse(null) != null) {
             throw new RequestToSocialGroupAlreadyExistException();
         }
         userGroupRequest.setGroupId(groupId);
@@ -63,16 +63,15 @@ public class UserGroupsService {
 
     @Transactional
     public void deleteSocialGroup(final Long groupId) {
-        checkSocialGroup(groupId);
+        final SocialGroup group = getSocialGroup(groupId);
         final Long userId = ContextHolder.userId();
-        final UserGroup userGroup = userGroupRepository.findUserGroupByUserIdEqualsAndGroupIdEquals(userId, groupId)
+        final UserGroup userGroup = userGroupRepository.findUserGroupByUserIdEqualsAndGroupIdEquals(userId, group.getId())
                 .orElseThrow(RequestToGroupNotExistException::new);
         userGroupRepository.delete(userGroup);
     }
 
-    private void checkSocialGroup(final Long groupId) {
-        socialGroupRepository.findById(groupId)
+    private SocialGroup getSocialGroup(final Long groupId) {
+        return socialGroupRepository.findById(groupId)
                 .orElseThrow(SocialGroupNotExistException::new);
     }
-
 }

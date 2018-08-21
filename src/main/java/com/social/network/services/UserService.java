@@ -39,12 +39,12 @@ public class UserService {
     @Transactional(readOnly = true)
     public SimpleUsersResponse getUsers(final String name, final String firstName, final String city) {
         final Long currentUserId = ContextHolder.userId();
-        final List<User> users = userRepository.findUsersByNameContainingAndFirstNameContainingAndCityContaining(name, firstName, city);
+        final List<User> users = userRepository.findUsersByNameContainingAndFirstNameContainingAndCityContainingAndIdIsNot(name, firstName, city, currentUserId);
         final Map<Long, Boolean> userIdAndIsFriendMap = users.stream()
                 .collect(Collectors.toMap(User::getId, e -> {
                     final Long userId = e.getId();
                     final UserFriends relationship = userFriendsRepository.getRelationship(userId, currentUserId)
-                            .orElse(new UserFriends());
+                            .orElse(null);
                     if (relationship != null && relationship.getStatus().equals(Status.APPROVED)) {
                         return true;
                     } else {
@@ -91,8 +91,8 @@ public class UserService {
             throw new LoginAlreadyExitstsException();
         }
         user.setLogin(userRequest.getLogin());
-        user.setPassword(new BCryptPasswordEncoder()
-                .encode(userRequest.getPassword()));
+        user.setPassword(//new BCryptPasswordEncoder()
+                /*.encode(*/userRequest.getPassword()/*)*/);
         user.setFirstName(userRequest.getFirstName());
         user.setName(userRequest.getName());
         user.setSurname(userRequest.getSurname());

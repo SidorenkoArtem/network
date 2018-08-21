@@ -1,5 +1,6 @@
 package com.social.network.model.dto;
 
+import com.social.network.model.enums.Sex;
 import lombok.Data;
 import java.time.LocalDate;
 
@@ -12,6 +13,7 @@ public class SimpleUserDto {
     private LocalDate birthday;
     private String country;
     private String city;
+    private Sex gender;
 
     private PagePermissionDto userPermission;
 

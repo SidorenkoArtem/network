@@ -14,5 +14,5 @@ public interface UserRepository extends CrudRepository<User, Long> {
     List<User> findUsersByIdIn(final Collection<Long> userIds);
     Optional<User> findUserByLoginEquals(final String login);
     Boolean existsByLoginEquals(final String login);
-    List<User> findUsersByNameContainingAndFirstNameContainingAndCityContaining(final String name, final String firstName, final String city);
+    List<User> findUsersByNameContainingAndFirstNameContainingAndCityContainingAndIdIsNot(final String name, final String firstName, final String city, final Long currentUserId);
 }

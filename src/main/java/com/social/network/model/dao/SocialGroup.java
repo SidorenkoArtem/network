@@ -25,5 +25,5 @@ public class SocialGroup {
     @Column(name = "private")
     private Boolean privateGroup;
     @Column(name = "create_timestamp")
-    private LocalDateTime createTimestamp;
+    private LocalDateTime createTimestamp = LocalDateTime.now();
 }

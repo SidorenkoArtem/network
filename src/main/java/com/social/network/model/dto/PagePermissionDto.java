@@ -9,4 +9,7 @@ public class PagePermissionDto {
     private Boolean showGifts;
     private Boolean showGroups;
     private Boolean showFriends;
+    private Boolean showGender;
+    private Boolean showBirthday;
+
 }

@@ -17,5 +17,5 @@ public class Gift {
     @Column(name = "image_url")
     private String imageUrl;
     @Column(name = "create_timestamp")
-    private LocalDateTime createTimestamp;
+    private LocalDateTime createTimestamp = LocalDateTime.now();
 }
