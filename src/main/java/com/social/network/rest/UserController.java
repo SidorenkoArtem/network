@@ -66,7 +66,7 @@ public class UserController {
     @GetMapping("/conversations")
     @ApiOperation(value = "Get conversation", response = ConversationResponse.class)
     public ResponseEntity<Object> getConversations(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                   @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
+                                                   @RequestParam(value = "limit", defaultValue = "10") Integer limit, @RequestBody List<Long> userId) {
         return new ResponseEntity<>(messagesService.getConversations(page, limit), HttpStatus.OK);
     }
 
